@@ -32,7 +32,7 @@ export interface TechnicalIndicators {
     d: number;
   };
   volume?: number;
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface TechnicalAnalysis {
@@ -52,7 +52,10 @@ export interface TradeDecision {
   confidence: number;
   rationale: string;
   risk_notes?: string;
-  alignment?: string;
+  alignment?: {
+    technical: string;
+    news: string;
+  };
 }
 
 export interface RiskAssessment {
@@ -65,8 +68,10 @@ export interface RiskAssessment {
 
 export interface NewsAnalysis {
   summary: string;
-  sentiment?: string;
+  sentiment: string;
+  confidence?: number;
   key_drivers?: string[];
+  drivers?: string[];
   headlines?: Array<{
     title: string;
     source: string;
@@ -80,6 +85,16 @@ export interface MetaInfo {
   tokens_used?: number;
   processing_time_ms?: number;
   timestamp?: string;
+  summary?: {
+    [key: string]: unknown;
+  };
+  usage?: {
+    [agent: string]: {
+      prompt_tokens?: number;
+      completion_tokens?: number;
+      total_tokens?: number;
+    };
+  };
 }
 
 export interface TimeframeResult {

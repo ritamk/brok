@@ -30,7 +30,7 @@ export function TimeframePicker({ selectedTimeframes, onToggleTimeframe }: Timef
               className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
                 isSelected
                   ? 'bg-green border-green text-white'
-                  : 'bg-card border-border text-text-secondary hover:bg-green hover:border-green hover:text-white hover:scale-98 transition-scale'
+                  : 'bg-card border-border text-text-secondary hover:bg-green/70 hover:border-green hover:text-white hover:scale-98 transition-scale'
               } ${isDisabled ? 'cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <div className="font-semibold">{timeframe.label}</div>

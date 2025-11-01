@@ -207,12 +207,14 @@ function App() {
 
             {/* Analysis groups */}
             <div className="space-y-6">
-              {analysisData.runs.map((run) => (
+              {analysisData.runs.map((run, index) => (
                 <AnalysisGroup
                   key={run.symbol}
                   run={run}
                   quoteSummary={enrichmentData[run.symbol]?.summary}
                   yahooNews={enrichmentData[run.symbol]?.news}
+                  isFirstTicker={index === 0}
+                  totalTickers={analysisData.runs.length}
                 />
               ))}
             </div>
