@@ -25,50 +25,64 @@ function App() {
 
   // Mutation for analyzing tickers
   const analyzeMutation = useMutation({
-    mutationFn: postTickersData,
-    onSuccess: async (data) => {
-      setAnalysisData(data);
-      setError(null);
+    mutationFn: async (payload: Parameters<typeof postTickersData>[0]) => {
+      // Start both calls simultaneously
+      const [analysisData, ...newsResults] = await Promise.allSettled([
+        postTickersData(payload),
+        // Fetch news for all selected tickers in parallel
+        ...payload.tickers.map((symbol) => getTickerNews(symbol, 5)),
+      ]);
 
-      // Enrich with backend combined quote + news for each symbol
+      // Handle analysis data result
+      if (analysisData.status === 'rejected') {
+        throw analysisData.reason;
+      }
+
+      const data = analysisData.value;
+
+      // Process news results - map them back to their corresponding symbols
       const enrichment: typeof enrichmentData = {};
       
-      await Promise.all(
-        data.runs.map(async (run) => {
-          try {
-            const newsAndQuote = await getTickerNews(run.symbol, 5);
+      payload.tickers.forEach((symbol, index) => {
+        const newsResult = newsResults[index];
+        if (newsResult.status === 'fulfilled') {
+          const newsAndQuote = newsResult.value;
 
-            const summary: YahooQuoteSummary = {
-              symbol: newsAndQuote.symbol,
-              shortName: undefined,
-              longName: undefined,
-              regularMarketPrice: newsAndQuote.price,
-              regularMarketChange: newsAndQuote.change,
-              regularMarketChangePercent: newsAndQuote.change_percent,
-              currency: newsAndQuote.currency,
-            };
+          const summary: YahooQuoteSummary = {
+            symbol: newsAndQuote.symbol,
+            shortName: undefined,
+            longName: undefined,
+            regularMarketPrice: newsAndQuote.price,
+            regularMarketChange: newsAndQuote.change,
+            regularMarketChangePercent: newsAndQuote.change_percent,
+            currency: newsAndQuote.currency,
+          };
 
-            const yahooNewsItems: YahooNewsItem[] = newsAndQuote.items.map((item, idx) => ({
-              uuid: `${newsAndQuote.symbol}-${idx}-${item.url}`,
-              title: item.headline,
-              publisher: 'News',
-              link: item.url,
-              providerPublishTime: Math.floor(Date.now() / 1000),
-              type: 'story',
-            }));
+          const yahooNewsItems: YahooNewsItem[] = newsAndQuote.items.map((item, idx) => ({
+            uuid: `${newsAndQuote.symbol}-${idx}-${item.url}`,
+            title: item.headline,
+            publisher: 'News',
+            link: item.url,
+            providerPublishTime: Math.floor(Date.now() / 1000),
+            type: 'story',
+          }));
 
-            enrichment[run.symbol] = {
-              summary,
-              news: yahooNewsItems,
-            };
-          } catch (err) {
-            console.error(`Failed to enrich data for ${run.symbol}:`, err);
-            enrichment[run.symbol] = {};
-          }
-        })
-      );
+          enrichment[symbol] = {
+            summary,
+            news: yahooNewsItems,
+          };
+        } else {
+          console.error(`Failed to enrich data for ${symbol}:`, newsResult.reason);
+          enrichment[symbol] = {};
+        }
+      });
 
+      return { data, enrichment };
+    },
+    onSuccess: ({ data, enrichment }) => {
+      setAnalysisData(data);
       setEnrichmentData(enrichment);
+      setError(null);
     },
     onError: (err: Error) => {
       setError(err.message);
@@ -111,20 +125,18 @@ function App() {
   const canAnalyze = selectedTickers.length > 0 && selectedTimeframes.length > 0;
 
   return (
-    <div className="min-h-screen bg-main text-text-primary flex flex-col">
+    <div className="min-h-screen bg-main-dark text-text-primary flex flex-col">
       {/* Loading overlay */}
       {analyzeMutation.isPending && <LoadingView />}
 
       {/* Header */}
-      <header className="border-b border-border">
+      <header>
         <div className="container mx-auto px-4 py-6">
-          <h1
-            className="text-5xl font-bold text-blue"
-            style={{ fontFamily: 'Momo Trust Display' }}
-          >
+          <h1 className="text-5xl font-bold text-blue font-brand">
             brok
           </h1>
-          <p className="text-text-primary/90 mt-1">AI-Powered Stock Analysis Dashboard</p>
+          {/* <p className="text-text-primary/90 mt-1"><span className="font-bold font-brand">brok</span> it till you make it</p> */}
+          <p className="text-text-primary/90 mt-1">{'let\'s make money'}</p>
         </div>
       </header>
 
@@ -133,9 +145,9 @@ function App() {
         {/* Search and selection section */}
         {!analysisData && (
           <div className="w-full max-w-3xl space-y-6">
-            <div className="bg-card border border-border rounded-lg p-6 space-y-6 shadow-sm">
+            <div className="bg-card rounded-[16px] py-6 px-10 space-y-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
               <div>
-                <h2 className="text-xl font-semibold mb-4">Select Stocks to Analyze</h2>
+                <h2 className="text-xl font-semibold mb-4">Search Stocks to Analyze</h2>
                 <TickerSearch
                   selectedTickers={selectedTickers}
                   onAddTicker={handleAddTicker}
@@ -222,14 +234,13 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-border mt-auto">
-        <div className="container mx-auto px-4 py-6 text-center text-sm text-text-muted)]">
+      <footer className=" mt-auto">
+        <div className="container mx-auto px-4 py-6 text-center text-sm text-text-muted">
           <p>
-            May you not go{' '}
-            <span className="font-bold" style={{ fontFamily: 'Momo Trust Display' }}>
+            <span className="font-bold font-brand">
               brok
             </span>
-            !
+            {' '} by Ritam
           </p>
         </div>
       </footer>

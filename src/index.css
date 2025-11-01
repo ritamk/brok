@@ -17,6 +17,7 @@
   /* Light Theme Backgrounds - Using brand colors */
   /* Main background: white */
   --color-main: #ffffff;
+  --color-main-dark: #f5f5f5;
   /* Card background: white with subtle border */
   --color-card: #ffffff;
   /* Card hover: very light gray for hover state */
@@ -40,16 +41,22 @@
   --color-green-light: rgba(138, 215, 89, 0.9); /* slightly darker for better contrast on light background */
   --color-purple: #72cad4; /* highlight-cyan as purple accent */
   --color-purple-light: #8ad759; /* accent-green as light purple */
-  /* For errors/warnings: using primary-blue variations to stay within brand palette */
-  --color-red: rgba(34, 62, 111, 0.15); /* primary-blue at low opacity for error backgrounds */
-  --color-red-light: rgba(34, 62, 111, 0.9); /* primary-blue darker for error text - good contrast on light */
-  --color-yellow: rgba(114, 202, 212, 0.2); /* highlight-cyan for warning backgrounds */
-  --color-yellow-light: rgba(34, 62, 111, 0.85); /* primary-blue for warning text */
+  /* Error colors - true red hues for better semantics and contrast */
+  --color-red: #d92d20; /* base red (text/icons). Use /15 for tinted backgrounds */
+  --color-red-light: #f04438; /* lighter/brighter red for hover/focus states */
+  /* Warning colors - true yellow hues for better semantics */
+  --color-yellow: #f59e0b; /* base yellow (text/icons). Use /15 for tinted backgrounds */
+  --color-yellow-light: #fbbf24; /* lighter/brighter yellow for hover/focus states */
   
-  /* Fonts */
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-brand: "Momo Trust Display", "Inter", sans-serif;
+  /* Fonts - Configured for Tailwind CSS v4 */
+  /* Body text: IBM Plex Sans */
+  --font-family-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  /* Branding: Momo Trust Display */
+  --font-family-brand: "Momo Trust Display", sans-serif;
+  
+  /* Legacy CSS variable names for backwards compatibility */
+  --font-sans: var(--font-family-sans);
+  --font-brand: var(--font-family-brand);
 }
 
 @layer base {
@@ -58,13 +65,23 @@
   }
   
   body {
-    font-family: var(--font-sans);
+    font-family: var(--font-family-sans);
     color: var(--color-text-primary);
     min-height: 100vh;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-heading);
+    font-family: var(--font-family-sans);
     color: var(--color-text-primary);
+  }
+}
+
+@layer utilities {
+  .font-brand {
+    font-family: var(--font-family-brand);
+  }
+  
+  .font-sans {
+    font-family: var(--font-family-sans);
   }
 }
