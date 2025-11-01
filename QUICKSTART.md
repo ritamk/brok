@@ -20,8 +20,6 @@ cp .env.example .env
 
 Your `.env` should look like:
 ```env
-VITE_RAPIDAPI_KEY=your_actual_key_here
-VITE_YAHOO_BASE_URL=https://yh-finance.p.rapidapi.com
 VITE_BACKEND_URL=http://0.0.0.0:8080
 ```
 
