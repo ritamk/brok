@@ -220,8 +220,6 @@ The optimized files will be in the `dist/` directory. Deploy to any static hosti
 ### Environment Variables in Production
 
 Ensure your production environment has:
-- `VITE_RAPIDAPI_KEY` - Your RapidAPI key
-- `VITE_YAHOO_BASE_URL` - Yahoo Finance API URL
 - `VITE_BACKEND_URL` - Your production backend URL
 
 ## Contributing
