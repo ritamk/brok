@@ -43,7 +43,7 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [] }: AnalysisGro
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden">
       {/* Header with company info */}
-      <div className="bg-linear-to-r from-card-hover to-card px-6 py-5 border-b border-border">
+      <div className="bg--to-r from-card-hover to-card px-6 py-5 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
             <h2 className="text-2xl font-bold text-text-primary">{run.symbol}</h2>

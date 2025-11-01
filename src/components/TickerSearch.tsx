@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { searchTickers } from '../api/backend';
 import type { YahooSearchResult } from '../types/yahoo';
 
@@ -29,7 +31,7 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
   // Search query
   const { data, isLoading } = useQuery({
     queryKey: ['search', debouncedQuery],
-    queryFn: () => searchTickers(debouncedQuery, 2),
+    queryFn: () => searchTickers(debouncedQuery, 4),
     enabled: debouncedQuery.length > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
@@ -146,18 +148,16 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
           {selectedTickers.map((ticker) => (
             <div
               key={ticker.symbol}
-              className="flex items-center gap-2 px-3 py-1.5 bg-blue/30 border border-blue rounded-full text-sm"
+              className="flex items-center gap-2 px-3 py-1.5 border-[1.5px] border-blue/70 rounded-full text-sm"
             >
-              <span className="font-semibold text-blue-light">{ticker.symbol}</span>
+              <span className="font-semibold text-blue/90">{ticker.symbol}</span>
               <span className="text-text-muted max-w-[150px] truncate">{ticker.name}</span>
               <button
                 onClick={() => onRemoveTicker(ticker.symbol)}
-                className="ml-1 text-text-muted hover:text-red-light transition-colors"
+                className="ml-1 text-red/30 hover:text-red transition-color hover:scale-115 transition-scale"
                 aria-label={`Remove ${ticker.symbol}`}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
               </button>
             </div>
           ))}

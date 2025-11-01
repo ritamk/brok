@@ -12,7 +12,7 @@ export function AnalyzeButton({ onClick, disabled, isLoading }: AnalyzeButtonPro
       className={`w-full px-6 py-4 rounded-lg font-semibold text-lg transition-all ${
         disabled || isLoading
           ? 'bg-card-hover text-text-disabled cursor-not-allowed'
-          : 'bg-linear-to-r from-blue to-purple hover:from-blue-dark hover:to-purple text-white shadow-lg hover:shadow-xl'
+          : 'bg-blue hover:bg-blue-dark text-white shadow-lg hover:shadow-xl cursor-pointer hover:scale-99 active:scale-95 transition-scale'
       }`}
     >
       {isLoading ? (
