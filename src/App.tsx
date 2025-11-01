@@ -11,7 +11,7 @@ import { AnalysisGroup } from './components/results/AnalysisGroup';
 
 function App() {
   const [selectedTickers, setSelectedTickers] = useState<YahooSearchResult[]>([]);
-  const [selectedTimeframes, setSelectedTimeframes] = useState<Timeframe[]>(['15m', '1D']);
+  const [selectedTimeframes, setSelectedTimeframes] = useState<Timeframe[]>(['1D']);
   const [analysisData, setAnalysisData] = useState<TickersDataResponse | null>(null);
   const [enrichmentData, setEnrichmentData] = useState<{
     [symbol: string]: {
@@ -111,24 +111,29 @@ function App() {
   const canAnalyze = selectedTickers.length > 0 && selectedTimeframes.length > 0;
 
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
+    <div className="min-h-screen bg-main text-text-primary flex flex-col">
       {/* Loading overlay */}
       {analyzeMutation.isPending && <LoadingView />}
 
       {/* Header */}
-      <header className="bg-linear-to-r from-blue-900 to-purple-900 border-b border-gray-800">
+      <header className="border-b border-border">
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold">Brok</h1>
-          <p className="text-gray-300 mt-1">AI-Powered Stock Analysis Dashboard</p>
+          <h1
+            className="text-5xl font-bold text-blue"
+            style={{ fontFamily: 'Momo Trust Display' }}
+          >
+            brok
+          </h1>
+          <p className="text-text-primary/90 mt-1">AI-Powered Stock Analysis Dashboard</p>
         </div>
       </header>
 
       {/* Main content */}
-      <main className="container mx-auto px-4 py-8">
+      <main className={`flex-1 container mx-auto px-4 py-8 ${!analysisData ? 'flex items-center justify-center' : ''}`}>
         {/* Search and selection section */}
         {!analysisData && (
-          <div className="max-w-3xl mx-auto space-y-6">
-            <div className="bg-gray-900 border border-gray-800 rounded-lg p-6 space-y-6">
+          <div className="w-full max-w-3xl space-y-6">
+            <div className="bg-card border border-border rounded-lg p-6 space-y-6 shadow-sm">
               <div>
                 <h2 className="text-xl font-semibold mb-4">Select Stocks to Analyze</h2>
                 <TickerSearch
@@ -150,33 +155,17 @@ function App() {
               />
 
               {error && (
-                <div className="bg-red-900/20 border border-red-800 rounded-lg p-4">
-                  <h3 className="font-semibold text-red-300 mb-1">Analysis Failed</h3>
-                  <p className="text-sm text-red-400">{error}</p>
+                <div className="bg-red/20 border border-red rounded-lg p-4">
+                  <h3 className="font-semibold text-red-light mb-1">Analysis Failed</h3>
+                  <p className="text-sm text-red-light">{error}</p>
                   <button
                     onClick={() => setError(null)}
-                    className="mt-2 text-sm text-red-300 hover:text-red-200 underline"
+                    className="mt-2 text-sm text-red-light hover:text-red-light/80 underline"
                   >
                     Dismiss
                   </button>
                 </div>
               )}
-            </div>
-
-            {/* Info cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div className="text-blue-400 font-semibold mb-1">📊 Technical Analysis</div>
-                <p className="text-gray-400">Get signals, indicators, and risk management insights</p>
-              </div>
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div className="text-purple-400 font-semibold mb-1">🤖 AI Trade Decisions</div>
-                <p className="text-gray-400">Receive AI-powered trade recommendations with rationale</p>
-              </div>
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div className="text-green-400 font-semibold mb-1">📰 News & Sentiment</div>
-                <p className="text-gray-400">Stay updated with latest headlines and market drivers</p>
-              </div>
             </div>
           </div>
         )}
@@ -188,7 +177,7 @@ function App() {
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold">Analysis Results</h2>
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-text-muted text-sm mt-1">
                   Generated at {new Date(analysisData.requested_at).toLocaleString()}
                 </p>
               </div>
@@ -198,7 +187,7 @@ function App() {
                   setEnrichmentData({});
                   setError(null);
                 }}
-                className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 rounded-lg transition-colors"
+                className="px-4 py-2 bg-card-hover hover:bg-card-hover/80 border border-border rounded-lg transition-colors"
               >
                 ← New Analysis
               </button>
@@ -218,7 +207,7 @@ function App() {
 
             {/* Summary meta */}
             {analysisData.meta && (
-              <div className="bg-gray-900 border border-gray-800 rounded-lg p-4 text-sm text-gray-500">
+              <div className="bg-card border border-border rounded-lg p-4 text-sm text-text-disabled">
                 <div className="flex gap-6">
                   <span>Symbols: {analysisData.meta.total_symbols}</span>
                   <span>Timeframes: {analysisData.meta.total_timeframes}</span>
@@ -233,10 +222,15 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-800 mt-16">
-        <div className="container mx-auto px-4 py-6 text-center text-sm text-gray-500">
-          <p>Powered by Yahoo Finance API and FastAPI Backend</p>
-          <p className="mt-1">Built with Vite + React + TypeScript + Tailwind CSS</p>
+      <footer className="border-t border-border mt-auto">
+        <div className="container mx-auto px-4 py-6 text-center text-sm text-text-muted)]">
+          <p>
+            May you not go{' '}
+            <span className="font-bold" style={{ fontFamily: 'Momo Trust Display' }}>
+              brok
+            </span>
+            !
+          </p>
         </div>
       </footer>
     </div>

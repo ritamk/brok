@@ -1,16 +1,70 @@
 @import "tailwindcss";
 
+@theme {
+  /* Brand Color Palette - Only these 5 colors */
+  --color-primary-blue: #223e6f;
+  --color-accent-green: #8ad759;
+  --color-secondary-grey: #c8c8c8;
+  --color-background-white: #ffffff;
+  --color-highlight-cyan: #72cad4;
+  
+  /* Aliases for convenience */
+  --color-primary: #223e6f;
+  --color-accent: #8ad759;
+  --color-secondary: #c8c8c8;
+  --color-highlight: #72cad4;
+  
+  /* Light Theme Backgrounds - Using brand colors */
+  /* Main background: white */
+  --color-main: #ffffff;
+  /* Card background: white with subtle border */
+  --color-card: #ffffff;
+  /* Card hover: very light gray for hover state */
+  --color-card-hover: #f5f5f5;
+  
+  /* Borders: using secondary-grey for visibility on light background */
+  --color-border: #c8c8c8;
+  --color-border-light: rgba(200, 200, 200, 0.5);
+  
+  /* Text colors: optimized for light theme background */
+  --color-text-primary: #223e6f; /* primary-blue for main text - dark for good contrast on light */
+  --color-text-secondary: rgba(34, 62, 111, 0.85); /* primary-blue slightly muted for secondary text */
+  --color-text-muted: rgba(34, 62, 111, 0.65); /* primary-blue with more opacity for muted text */
+  --color-text-disabled: rgba(34, 62, 111, 0.4); /* primary-blue very faded for disabled text */
+  
+  /* Action colors - Using brand colors only */
+  --color-blue: #223e6f; /* primary-blue */
+  --color-blue-dark: #1a2d4f; /* darker variant of primary-blue */
+  --color-blue-light: #72cad4; /* highlight-cyan as light blue */
+  --color-green: #8ad759; /* accent-green */
+  --color-green-light: rgba(138, 215, 89, 0.9); /* slightly darker for better contrast on light background */
+  --color-purple: #72cad4; /* highlight-cyan as purple accent */
+  --color-purple-light: #8ad759; /* accent-green as light purple */
+  /* For errors/warnings: using primary-blue variations to stay within brand palette */
+  --color-red: rgba(34, 62, 111, 0.15); /* primary-blue at low opacity for error backgrounds */
+  --color-red-light: rgba(34, 62, 111, 0.9); /* primary-blue darker for error text - good contrast on light */
+  --color-yellow: rgba(114, 202, 212, 0.2); /* highlight-cyan for warning backgrounds */
+  --color-yellow-light: rgba(34, 62, 111, 0.85); /* primary-blue for warning text */
+  
+  /* Fonts */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-brand: "Momo Trust Display", "Inter", sans-serif;
+}
+
 @layer base {
   html, body {
-    @apply bg-background;
+    background-color: var(--color-main);
   }
   
   body {
-    @apply font-sans text-primary;
+    font-family: var(--font-sans);
+    color: var(--color-text-primary);
     min-height: 100vh;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-heading text-primary;
+    font-family: var(--font-heading);
+    color: var(--color-text-primary);
   }
 }

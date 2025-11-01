@@ -6,7 +6,7 @@ import type { YahooSearchResponse, YahooSearchResult } from '../types/yahoo';
 // In dev, call backend directly; in prod, use configured base URL
 const IS_DEV_ENV: boolean = import.meta.env.DEV;
 const API_BASE: string = IS_DEV_ENV
-  ? 'http://0.0.0.0:8080'
+  ? ''
   : (import.meta.env.VITE_BACKEND_URL as string) || '';
 
 /**

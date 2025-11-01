@@ -5,7 +5,7 @@ interface IndicatorTableProps {
 }
 
 export function IndicatorTable({ indicators }: IndicatorTableProps) {
-  const formatValue = (value: any): string => {
+  const formatValue = (value: unknown): string => {
     if (value === null || value === undefined) return 'N/A';
     if (typeof value === 'number') return value.toFixed(2);
     if (typeof value === 'object') return JSON.stringify(value);
@@ -71,23 +71,23 @@ export function IndicatorTable({ indicators }: IndicatorTableProps) {
   });
 
   if (rows.length === 0) {
-    return <div className="text-gray-500 text-sm">No indicators available</div>;
+    return <div className="text-text-disabled text-sm">No indicators available</div>;
   }
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-gray-700">
-            <th className="text-left py-2 px-3 text-gray-400 font-medium">Indicator</th>
-            <th className="text-right py-2 px-3 text-gray-400 font-medium">Value</th>
+          <tr className="border-b border-border">
+            <th className="text-left py-2 px-3 text-text-muted font-medium">Indicator</th>
+            <th className="text-right py-2 px-3 text-text-muted font-medium">Value</th>
           </tr>
         </thead>
         <tbody>
           {rows.map((row, index) => (
-            <tr key={index} className="border-b border-gray-800 hover:bg-gray-900/50">
-              <td className="py-2 px-3 text-gray-300">{row.label}</td>
-              <td className="py-2 px-3 text-right font-mono text-gray-100">{row.value}</td>
+            <tr key={index} className="border-b border-border hover:bg-card/50">
+              <td className="py-2 px-3 text-text-secondary">{row.label}</td>
+              <td className="py-2 px-3 text-right font-mono text-text-primary">{row.value}</td>
             </tr>
           ))}
         </tbody>

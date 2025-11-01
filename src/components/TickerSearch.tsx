@@ -105,34 +105,34 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
           onFocus={() => setShowDropdown(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search for stocks (e.g., Apollo Tyres, Infosys)..."
-          className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full px-4 py-3 bg-card border border-border rounded-lg text-text-primary placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent"
         />
         
         {isLoading && (
           <div className="absolute right-3 top-3">
-            <div className="animate-spin h-5 w-5 border-2 border-blue-500 border-t-transparent rounded-full"></div>
+            <div className="animate-spin h-5 w-5 border-2 border-blue border-t-transparent rounded-full"></div>
           </div>
         )}
 
         {showDropdown && suggestions.length > 0 && (
           <div
             ref={dropdownRef}
-            className="absolute z-10 w-full mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg max-h-64 overflow-y-auto"
+            className="absolute z-10 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-64 overflow-y-auto"
           >
             {suggestions.map((suggestion, index) => (
               <button
                 key={suggestion.symbol}
                 onClick={() => handleSelectTicker(suggestion)}
-                className={`w-full px-4 py-3 text-left hover:bg-gray-800 transition-colors ${
-                  index === selectedIndex ? 'bg-gray-800' : ''
+                className={`w-full px-4 py-3 text-left hover:bg-card-hover transition-colors ${
+                  index === selectedIndex ? 'bg-card-hover' : ''
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-gray-100">{suggestion.symbol}</div>
-                    <div className="text-sm text-gray-400">{suggestion.name}</div>
+                    <div className="font-semibold text-text-primary">{suggestion.symbol}</div>
+                    <div className="text-sm text-text-muted">{suggestion.name}</div>
                   </div>
-                  <div className="text-xs text-gray-500">{suggestion.exchDisp}</div>
+                  <div className="text-xs text-text-disabled">{suggestion.exchDisp}</div>
                 </div>
               </button>
             ))}
@@ -146,13 +146,13 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
           {selectedTickers.map((ticker) => (
             <div
               key={ticker.symbol}
-              className="flex items-center gap-2 px-3 py-1.5 bg-blue-900/30 border border-blue-700 rounded-full text-sm"
+              className="flex items-center gap-2 px-3 py-1.5 bg-blue/30 border border-blue rounded-full text-sm"
             >
-              <span className="font-semibold text-blue-300">{ticker.symbol}</span>
-              <span className="text-gray-400 max-w-[150px] truncate">{ticker.name}</span>
+              <span className="font-semibold text-blue-light">{ticker.symbol}</span>
+              <span className="text-text-muted max-w-[150px] truncate">{ticker.name}</span>
               <button
                 onClick={() => onRemoveTicker(ticker.symbol)}
-                className="ml-1 text-gray-400 hover:text-red-400 transition-colors"
+                className="ml-1 text-text-muted hover:text-red-light transition-colors"
                 aria-label={`Remove ${ticker.symbol}`}
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

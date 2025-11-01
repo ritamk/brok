@@ -2,6 +2,8 @@
 
 This document provides a quick reference for using the design tokens (colors and fonts) in the Brok application.
 
+**Note:** This project uses Tailwind CSS v4, which defines theme tokens using the `@theme` directive in `src/index.css`.
+
 ## Color Palette
 
 ### Primary Colors
@@ -19,8 +21,8 @@ This document provides a quick reference for using the design tokens (colors and
 
 ### Neutral Colors
 - **Background White** (`#ffffff`): Main background color
-  - Tailwind: `bg-background`, `text-background`
-  - Also available as: `bg-background-white`
+  - Tailwind: `bg-background-white`, `text-background-white`
+  - Also available as: `bg-bg-main`
 
 - **Secondary Grey** (`#c8c8c8`): Secondary text, borders, dividers
   - Tailwind: `text-secondary`, `bg-secondary`, `border-secondary`
@@ -56,7 +58,7 @@ This document provides a quick reference for using the design tokens (colors and
 
 ### Backgrounds
 ```tsx
-<div className="bg-background">White background</div>
+<div className="bg-background-white">White background</div>
 <button className="bg-primary text-white">Primary button</button>
 <div className="bg-highlight">Highlighted section</div>
 ```
@@ -76,7 +78,7 @@ This document provides a quick reference for using the design tokens (colors and
 </button>
 
 // Card with brand styling
-<div className="bg-background border border-secondary rounded-lg p-6">
+<div className="bg-background-white border border-secondary rounded-lg p-6">
   <h2 className="font-heading text-primary text-2xl mb-4">Portfolio</h2>
   <p className="font-sans text-primary">Your portfolio details...</p>
 </div>

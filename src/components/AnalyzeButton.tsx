@@ -11,8 +11,8 @@ export function AnalyzeButton({ onClick, disabled, isLoading }: AnalyzeButtonPro
       disabled={disabled || isLoading}
       className={`w-full px-6 py-4 rounded-lg font-semibold text-lg transition-all ${
         disabled || isLoading
-          ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-          : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl'
+          ? 'bg-card-hover text-text-disabled cursor-not-allowed'
+          : 'bg-linear-to-r from-blue to-purple hover:from-blue-dark hover:to-purple text-white shadow-lg hover:shadow-xl'
       }`}
     >
       {isLoading ? (
