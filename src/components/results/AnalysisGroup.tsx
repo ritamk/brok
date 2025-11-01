@@ -14,9 +14,9 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [] }: AnalysisGro
 
   if (run.error) {
     return (
-      <div className="bg-red-900/20 border border-red-800 rounded-lg p-5">
-        <h3 className="text-lg font-semibold text-red-300 mb-2">{run.symbol}</h3>
-        <p className="text-red-400">Error: {run.error}</p>
+      <div className="bg-red/20 border border-red rounded-lg p-5">
+        <h3 className="text-lg font-semibold text-red-light mb-2">{run.symbol}</h3>
+        <p className="text-red-light">Error: {run.error}</p>
       </div>
     );
   }
@@ -32,7 +32,7 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [] }: AnalysisGro
   const formatChange = (change?: number | null, changePercent?: number | null) => {
     if (!isFiniteNumber(change) || !isFiniteNumber(changePercent)) return 'N/A';
     const sign = change >= 0 ? '+' : '';
-    const color = change >= 0 ? 'text-green-400' : 'text-red-400';
+    const color = change >= 0 ? 'text-green-light' : 'text-red-light';
     return (
       <span className={color}>
         {sign}{change.toFixed(2)} ({sign}{changePercent.toFixed(2)}%)
@@ -41,21 +41,21 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [] }: AnalysisGro
   };
 
   return (
-    <div className="bg-gray-900 border border-gray-800 rounded-lg overflow-hidden">
+    <div className="bg-card border border-border rounded-lg overflow-hidden">
       {/* Header with company info */}
-      <div className="bg-linear-to-r from-gray-800 to-gray-900 px-6 py-5 border-b border-gray-700">
+      <div className="bg-linear-to-r from-card-hover to-card px-6 py-5 border-b border-border">
         <div className="flex items-start justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-100">{run.symbol}</h2>
+            <h2 className="text-2xl font-bold text-text-primary">{run.symbol}</h2>
             {quoteSummary && (
-              <p className="text-gray-400 mt-1">
+              <p className="text-text-muted mt-1">
                 {quoteSummary.longName || quoteSummary.shortName || 'Company Name'}
               </p>
             )}
           </div>
           {quoteSummary && (
             <div className="text-right">
-              <div className="text-2xl font-bold text-gray-100">
+              <div className="text-2xl font-bold text-text-primary">
                 {quoteSummary.currency} {formatPrice(quoteSummary.regularMarketPrice)}
               </div>
               <div className="text-sm mt-1">
@@ -67,15 +67,15 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [] }: AnalysisGro
       </div>
 
       {/* Timeframe tabs */}
-      <div className="flex border-b border-gray-800 bg-gray-900/50">
+      <div className="flex border-b border-border bg-card/50">
         {run.results.map((result, index) => (
           <button
             key={result.timeframe}
             onClick={() => setActiveTab(index)}
             className={`flex-1 px-6 py-3 font-semibold transition-colors ${
               activeTab === index
-                ? 'bg-gray-900 text-blue-400 border-b-2 border-blue-500'
-                : 'text-gray-500 hover:text-gray-300 hover:bg-gray-900/50'
+                ? 'bg-card text-blue-light border-b-2 border-blue'
+                : 'text-text-disabled hover:text-text-secondary hover:bg-card/50'
             }`}
           >
             {result.timeframe}

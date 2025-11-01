@@ -14,8 +14,8 @@ const TIMEFRAMES: { value: Timeframe; label: string; description: string }[] = [
 export function TimeframePicker({ selectedTimeframes, onToggleTimeframe }: TimeframePickerProps) {
   return (
     <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-300">
-        Select Timeframes <span className="text-gray-500">(at least one required)</span>
+      <label className="block text-sm font-medium text-text-secondary">
+        Select Timeframes <span className="text-text-disabled">(at least one required)</span>
       </label>
       <div className="flex gap-3">
         {TIMEFRAMES.map((timeframe) => {
@@ -29,8 +29,8 @@ export function TimeframePicker({ selectedTimeframes, onToggleTimeframe }: Timef
               disabled={isDisabled}
               className={`flex-1 px-4 py-3 rounded-lg border-2 transition-all ${
                 isSelected
-                  ? 'bg-blue-600 border-blue-500 text-white'
-                  : 'bg-gray-900 border-gray-700 text-gray-300 hover:border-gray-600'
+                  ? 'bg-blue border-blue text-white'
+                  : 'bg-card border-border text-text-secondary hover:border-border-light'
               } ${isDisabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
             >
               <div className="font-semibold">{timeframe.label}</div>
