@@ -1,0 +1,109 @@
+// Backend API types
+
+export type Timeframe = '5m' | '15m' | '1D';
+
+export interface TickersDataRequest {
+  tickers: string[];
+  timeframes: Timeframe[];
+}
+
+export interface TechnicalIndicators {
+  rsi?: number;
+  macd?: {
+    macd: number;
+    signal: number;
+    histogram: number;
+  };
+  moving_averages?: {
+    sma_20?: number;
+    sma_50?: number;
+    ema_12?: number;
+    ema_26?: number;
+  };
+  bollinger_bands?: {
+    upper: number;
+    middle: number;
+    lower: number;
+  };
+  atr?: number;
+  adx?: number;
+  stochastic?: {
+    k: number;
+    d: number;
+  };
+  volume?: number;
+  [key: string]: any;
+}
+
+export interface TechnicalAnalysis {
+  signal: 'buy' | 'sell' | 'hold' | 'neutral';
+  confidence: number;
+  rules_triggered: string[];
+  indicators: TechnicalIndicators;
+  risk?: {
+    stop_loss?: number;
+    take_profit?: number;
+    risk_reward_ratio?: number;
+  };
+}
+
+export interface TradeDecision {
+  decision: string;
+  confidence: number;
+  rationale: string;
+  risk_notes?: string;
+  alignment?: string;
+}
+
+export interface RiskAssessment {
+  stop_loss?: number;
+  take_profit?: number;
+  risk_reward_ratio?: number;
+  position_size?: string;
+  notes?: string;
+}
+
+export interface NewsAnalysis {
+  summary: string;
+  sentiment?: string;
+  key_drivers?: string[];
+  headlines?: Array<{
+    title: string;
+    source: string;
+    url?: string;
+    published?: string;
+  }>;
+}
+
+export interface MetaInfo {
+  model?: string;
+  tokens_used?: number;
+  processing_time_ms?: number;
+  timestamp?: string;
+}
+
+export interface TimeframeResult {
+  timeframe: Timeframe;
+  technical: TechnicalAnalysis;
+  trade: TradeDecision;
+  risk: RiskAssessment;
+  news: NewsAnalysis;
+  meta?: MetaInfo;
+}
+
+export interface SymbolRun {
+  symbol: string;
+  results: TimeframeResult[];
+  error?: string;
+}
+
+export interface TickersDataResponse {
+  requested_at: string;
+  runs: SymbolRun[];
+  meta?: {
+    total_symbols: number;
+    total_timeframes: number;
+    total_processing_time_ms?: number;
+  };
+}
+
