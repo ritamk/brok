@@ -252,3 +252,39 @@ For issues, questions, or feature requests, please open an issue on GitHub.
 ---
 
 Built with ❤️ using modern web technologies
+
+## Deploy to Firebase Hosting (brok)
+
+1. Install the CLI (or use npx):
+   ```bash
+   npm i -g firebase-tools
+   # or use npx without global install
+   ```
+
+2. Login and select your project:
+   ```bash
+   firebase login
+   firebase use brok
+   ```
+
+3. Build with your backend URL (FastAPI) set:
+   ```bash
+   VITE_BACKEND_URL="https://YOUR-BACKEND-HOST" npm run build
+   ```
+
+   - The app reads `import.meta.env.VITE_BACKEND_URL` in production.
+   - Dev uses the Vite proxy (`/v1`) from `vite.config.ts`.
+
+4. Deploy hosting:
+   ```bash
+   npm run deploy:hosting
+   ```
+
+5. Local preview (optional):
+   ```bash
+   npm run serve:hosting
+   ```
+
+Firebase config added:
+- `firebase.json` serves `dist/`, caches `/assets/**`, SPA fallback to `/index.html`.
+- `.firebaserc` sets default project to `brok`.

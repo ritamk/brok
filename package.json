@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "serve:hosting": "npx --yes firebase-tools emulators:start --only hosting",
+    "deploy:hosting": "npm run build && npx --yes firebase-tools deploy --only hosting"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.5",

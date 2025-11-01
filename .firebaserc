@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "brok-c367d",
+    "prod": "brok-c367d",
+    "brok": "brok-c367d"
+  },
+  "targets": {},
+  "etags": {}
+}
