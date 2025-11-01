@@ -3,11 +3,12 @@
 import type { TickersDataRequest, TickersDataResponse } from '../types/backend';
 import type { YahooSearchResponse, YahooSearchResult } from '../types/yahoo';
 
-// In dev, call backend directly; in prod, use configured base URL
+// In dev, call backend directly (proxied via Vite).
+// In prod, prefer configured base; if missing, fall back to Cloud Run default.
 const IS_DEV_ENV: boolean = import.meta.env.DEV;
-const API_BASE: string = IS_DEV_ENV
-  ? ''
-  : (import.meta.env.VITE_BACKEND_URL as string) || '';
+const PRODUCTION_BACKEND_DEFAULT: string = 'https://brok-api-341823408271.asia-south2.run.app';
+const CONFIGURED_BASE: string = ((import.meta.env.VITE_BACKEND_URL as string | undefined) || '').trim();
+const API_BASE: string = IS_DEV_ENV ? '' : (CONFIGURED_BASE || PRODUCTION_BACKEND_DEFAULT);
 
 /**
  * Post tickers data request to backend
