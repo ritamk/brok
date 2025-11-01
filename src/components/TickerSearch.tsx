@@ -106,7 +106,7 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
           }}
           onFocus={() => setShowDropdown(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search for stocks (e.g., Apollo Tyres, Infosys)..."
+          placeholder="Search for stocks (e.g., Apollo Tyres, Infosys...)"
           className="w-full px-4 py-3 bg-card border border-border rounded-lg text-text-primary placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent"
         />
         

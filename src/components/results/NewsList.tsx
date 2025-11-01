@@ -4,9 +4,11 @@ interface NewsListProps {
   news: YahooNewsItem[];
   backendSummary?: string;
   keyDrivers?: string[];
+  sentiment?: string;
+  sentimentConfidence?: number;
 }
 
-export function NewsList({ news, backendSummary, keyDrivers }: NewsListProps) {
+export function NewsList({ news, backendSummary, keyDrivers, sentiment, sentimentConfidence }: NewsListProps) {
   const formatDate = (timestamp: number) => {
     const date = new Date(timestamp * 1000);
     const now = new Date();
@@ -20,8 +22,52 @@ export function NewsList({ news, backendSummary, keyDrivers }: NewsListProps) {
     return date.toLocaleDateString();
   };
 
+  const getSentimentColor = (sent?: string) => {
+    if (!sent) return { bg: 'bg-card-hover', text: 'text-text-primary', border: 'border-border' };
+    const normalized = sent.toLowerCase();
+    if (normalized.includes('bullish')) return { bg: 'bg-green', text: 'text-white', border: 'border-green' };
+    if (normalized.includes('bearish')) return { bg: 'bg-red', text: 'text-white', border: 'border-red' };
+    return { bg: 'bg-yellow', text: 'text-white', border: 'border-yellow' };
+  };
+
+  const getConfidenceColor = (confidence?: number) => {
+    if (!confidence) return 'bg-card-hover';
+    if (confidence >= 0.7) return 'bg-green';
+    if (confidence >= 0.4) return 'bg-yellow';
+    return 'bg-red';
+  };
+
+  const sentimentColors = getSentimentColor(sentiment);
+
   return (
     <div className="space-y-4">
+      {/* Sentiment Badge and Confidence */}
+      {sentiment && (
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-4">
+            <div className={`px-6 py-3 rounded-full text-xl font-bold ${sentimentColors.bg} ${sentimentColors.text}`}>
+              {sentiment.toUpperCase()}
+            </div>
+            {sentimentConfidence !== undefined && (
+              <div className="flex flex-col">
+                <div className="text-xs text-text-muted mb-1">Confidence</div>
+                <div className="flex items-center gap-2">
+                  <div className="w-24 h-2 bg-card-hover rounded-full overflow-hidden">
+                    <div
+                      className={`h-full rounded-full ${getConfidenceColor(sentimentConfidence)}`}
+                      style={{ width: `${sentimentConfidence * 100}%` }}
+                    ></div>
+                  </div>
+                  <span className="text-sm font-semibold text-text-primary">
+                    {Math.round(sentimentConfidence * 100)}%
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Backend AI Summary */}
       {backendSummary && (
         <div className="bg-blue/20 border border-blue rounded-lg p-4">
