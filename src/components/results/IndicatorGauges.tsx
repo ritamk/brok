@@ -12,17 +12,53 @@ interface IndicatorGaugesProps {
 }
 
 export function IndicatorGauges({ indicators, currentPrice }: IndicatorGaugesProps) {
+  // Type guards
+  const isBollingerBands = (value: unknown): value is { upper: number; middle: number; lower: number; band_pct?: number } => {
+    if (typeof value !== 'object' || value === null) return false;
+    const obj = value as Record<string, unknown>;
+    return (
+      'upper' in obj &&
+      'middle' in obj &&
+      'lower' in obj &&
+      typeof obj.upper === 'number' &&
+      typeof obj.middle === 'number' &&
+      typeof obj.lower === 'number'
+    );
+  };
+
+  const isStochastic = (value: unknown): value is { k: number; d: number } => {
+    if (typeof value !== 'object' || value === null) return false;
+    const obj = value as Record<string, unknown>;
+    return (
+      'k' in obj &&
+      'd' in obj &&
+      typeof obj.k === 'number' &&
+      typeof obj.d === 'number'
+    );
+  };
+
+  const isValidNumber = (value: unknown): value is number => 
+    typeof value === 'number' && !isNaN(value) && isFinite(value);
+
   // Extract indicator values with proper type handling
   const rsi = typeof indicators.rsi_14 === 'number' ? indicators.rsi_14 : indicators.rsi;
   const macd = indicators.macd;
-  const bbands = indicators.bbands || indicators.bollinger_bands;
-  const stoch = indicators.stoch || indicators.stochastic;
+  const bbands = isBollingerBands(indicators.bbands) ? indicators.bbands : 
+                 isBollingerBands(indicators.bollinger_bands) ? indicators.bollinger_bands : 
+                 null;
+  const stoch = isStochastic(indicators.stoch) ? indicators.stoch :
+                isStochastic(indicators.stochastic) ? indicators.stochastic :
+                null;
   const adx = typeof indicators.adx_14 === 'number' ? indicators.adx_14 : indicators.adx;
   const atr = typeof indicators.atr_14 === 'number' ? indicators.atr_14 : indicators.atr;
-  const sma_20 = indicators.sma_20 || indicators.moving_averages?.sma_20;
-  const sma_50 = indicators.sma_50 || indicators.moving_averages?.sma_50;
-  const ema_50 = (indicators as any).ema_50;
-  const obv = indicators.obv;
+  const sma_20 = isValidNumber(indicators.sma_20) ? indicators.sma_20 :
+                 isValidNumber(indicators.moving_averages?.sma_20) ? indicators.moving_averages.sma_20 :
+                 undefined;
+  const sma_50 = isValidNumber(indicators.sma_50) ? indicators.sma_50 :
+                 isValidNumber(indicators.moving_averages?.sma_50) ? indicators.moving_averages.sma_50 :
+                 undefined;
+  const ema_50 = isValidNumber((indicators as Record<string, unknown>).ema_50) ? (indicators as Record<string, unknown>).ema_50 as number : undefined;
+  const obv = isValidNumber(indicators.obv) ? indicators.obv : undefined;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -39,13 +75,13 @@ export function IndicatorGauges({ indicators, currentPrice }: IndicatorGaugesPro
           <MACDChart 
             macd={macd.macd} 
             signal={macd.signal} 
-            histogram={(macd as any).hist || macd.histogram || 0} 
+            histogram={isValidNumber((macd as Record<string, unknown>).hist) ? (macd as Record<string, unknown>).hist as number : macd.histogram ?? 0} 
           />
         </div>
       )}
 
       {/* Bollinger Bands */}
-      {bbands && bbands.upper !== undefined && bbands.middle !== undefined && bbands.lower !== undefined && (
+      {bbands && (
         <div className="bg-card-hover/50 rounded-lg p-4 border border-border">
           <BollingerBandsVisual
             upper={bbands.upper}
@@ -58,7 +94,7 @@ export function IndicatorGauges({ indicators, currentPrice }: IndicatorGaugesPro
       )}
 
       {/* Stochastic */}
-      {stoch && stoch.k !== undefined && stoch.d !== undefined && (
+      {stoch && (
         <div className="bg-card-hover/50 rounded-lg p-4 border border-border">
           <StochasticChart k={stoch.k} d={stoch.d} />
         </div>
