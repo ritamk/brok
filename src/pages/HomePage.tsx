@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from '@tanstack/react-query';
-import { postTickersData, getTickerNews } from '../api/backend';
-import type { YahooSearchResult, YahooQuoteSummary, YahooNewsItem } from '../types/yahoo';
+import { postTickersData } from '../api/backend';
+import type { YahooSearchResult, YahooNewsItem } from '../types/yahoo';
 import type { Timeframe } from '../types/backend';
 import { TickerSearch } from '../components/TickerSearch';
 import { TimeframePicker } from '../components/TimeframePicker';
@@ -18,59 +18,34 @@ export function HomePage() {
   // Mutation for analyzing tickers
   const analyzeMutation = useMutation({
     mutationFn: async (payload: Parameters<typeof postTickersData>[0]) => {
-      // Start both calls simultaneously
-      const [analysisData, ...newsResults] = await Promise.allSettled([
-        postTickersData(payload),
-        // Fetch news for all selected tickers in parallel
-        ...payload.tickers.map((symbol) => getTickerNews(symbol, 5)),
-      ]);
+      const data = await postTickersData(payload);
 
-      // Handle analysis data result
-      if (analysisData.status === 'rejected') {
-        throw analysisData.reason;
-      }
-
-      const data = analysisData.value;
-
-      // Process news results - map them back to their corresponding symbols
+      // Process news payload from response - map headlines to YahooNewsItem format
       const enrichment: {
         [symbol: string]: {
-          summary?: YahooQuoteSummary;
-          news?: YahooNewsItem[];
+          symbolNews?: YahooNewsItem[];
+          indiaNews?: YahooNewsItem[];
+          globalNews?: YahooNewsItem[];
         };
       } = {};
       
-      payload.tickers.forEach((symbol, index) => {
-        const newsResult = newsResults[index];
-        if (newsResult.status === 'fulfilled') {
-          const newsAndQuote = newsResult.value;
+      data.runs.forEach((run) => {
+        if (run.news_payload) {
+          const mapHeadlines = (headlines: typeof run.news_payload.symbol_headlines, prefix: string) => 
+            headlines.map((headline, idx) => ({
+              uuid: `${run.symbol}-${prefix}-${idx}-${headline.url}`,
+              title: headline.title,
+              publisher: headline.source,
+              link: headline.url,
+              providerPublishTime: Math.floor(Date.now() / 1000),
+              type: 'story' as const,
+            }));
 
-          const summary: YahooQuoteSummary = {
-            symbol: newsAndQuote.symbol,
-            shortName: undefined,
-            longName: undefined,
-            regularMarketPrice: newsAndQuote.price,
-            regularMarketChange: newsAndQuote.change,
-            regularMarketChangePercent: newsAndQuote.change_percent,
-            currency: newsAndQuote.currency,
+          enrichment[run.symbol] = {
+            symbolNews: mapHeadlines(run.news_payload.symbol_headlines, 'symbol'),
+            indiaNews: mapHeadlines(run.news_payload.india_headlines, 'india'),
+            globalNews: mapHeadlines(run.news_payload.global_headlines, 'global'),
           };
-
-          const yahooNewsItems: YahooNewsItem[] = newsAndQuote.items.map((item, idx) => ({
-            uuid: `${newsAndQuote.symbol}-${idx}-${item.url}`,
-            title: item.headline,
-            publisher: 'News',
-            link: item.url,
-            providerPublishTime: Math.floor(Date.now() / 1000),
-            type: 'story',
-          }));
-
-          enrichment[symbol] = {
-            summary,
-            news: yahooNewsItems,
-          };
-        } else {
-          console.error(`Failed to enrich data for ${symbol}:`, newsResult.reason);
-          enrichment[symbol] = {};
         }
       });
 
@@ -128,7 +103,12 @@ export function HomePage() {
   return (
     <>
       {/* Loading overlay */}
-      {analyzeMutation.isPending && <LoadingView />}
+      {analyzeMutation.isPending && (
+        <LoadingView 
+          tickerCount={selectedTickers.length} 
+          timeframeCount={selectedTimeframes.length} 
+        />
+      )}
 
       {/* Search and selection section */}
       <div className="w-full max-w-3xl space-y-6">

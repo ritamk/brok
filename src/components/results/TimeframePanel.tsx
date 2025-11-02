@@ -6,11 +6,13 @@ import { NewsList } from './NewsList';
 
 interface TimeframePanelProps {
   result: TimeframeResult;
-  yahooNews: YahooNewsItem[];
+  symbolNews: YahooNewsItem[];
+  indiaNews: YahooNewsItem[];
+  globalNews: YahooNewsItem[];
   currentPrice?: number;
 }
 
-export function TimeframePanel({ result, yahooNews, currentPrice }: TimeframePanelProps) {
+export function TimeframePanel({ result, symbolNews, indiaNews, globalNews, currentPrice }: TimeframePanelProps) {
   const { technical, trade, news, meta } = result;
 
   return (
@@ -101,9 +103,11 @@ export function TimeframePanel({ result, yahooNews, currentPrice }: TimeframePan
       <div className="bg-card rounded-[16px] p-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
         <h3 className="text-lg font-semibold text-text-primary mb-4">News & Sentiment</h3>
         <NewsList
-          news={yahooNews}
+          symbolNews={symbolNews}
+          indiaNews={indiaNews}
+          globalNews={globalNews}
           backendSummary={news.summary}
-          keyDrivers={news.key_drivers || news.drivers}
+          keyDrivers={news.drivers}
           sentiment={news.sentiment}
           sentimentConfidence={news.confidence}
         />
@@ -119,7 +123,7 @@ export function TimeframePanel({ result, yahooNews, currentPrice }: TimeframePan
             {/* Summary Stats */}
             {meta.summary && (
               <div>
-                <div className="text-xs font-semibold text-text-secondary mb-2">Summary</div>
+                <div className="text-xs font-semibold text-text-secondary my-2">Summary</div>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
                   {Object.entries(meta.summary).map(([key, value]) => (
                     <div key={key} className="bg-card rounded p-2 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">

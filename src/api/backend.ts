@@ -63,30 +63,3 @@ export async function searchTickers(query: string, limit = 2): Promise<YahooSear
 
   return { quotes };
 }
-
-/**
- * Get combined quote summary and news for a symbol
- */
-export interface BackendTickerNewsResponse {
-  symbol: string;
-  price: number;
-  change: number;
-  change_percent: number;
-  currency: string;
-  quote_url: string;
-  items: Array<{ headline: string; url: string }>;
-}
-
-export async function getTickerNews(symbol: string, limit = 5): Promise<BackendTickerNewsResponse> {
-  const url = `${API_BASE}/v1/tickers/news?symbol=${encodeURIComponent(symbol)}&limit=${limit}`;
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    const errorText = await response.text();
-    throw new Error(`Backend news failed: ${response.status} ${response.statusText} - ${errorText}`);
-  }
-
-  return response.json();
-}
-

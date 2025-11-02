@@ -9,7 +9,9 @@ interface LocationState {
   enrichmentData: {
     [symbol: string]: {
       summary?: YahooQuoteSummary;
-      news?: YahooNewsItem[];
+      symbolNews?: YahooNewsItem[];
+      indiaNews?: YahooNewsItem[];
+      globalNews?: YahooNewsItem[];
     };
   };
 }
@@ -57,7 +59,9 @@ export function ResultsPage() {
             key={run.symbol}
             run={run}
             quoteSummary={enrichmentData[run.symbol]?.summary}
-            yahooNews={enrichmentData[run.symbol]?.news}
+            symbolNews={enrichmentData[run.symbol]?.symbolNews}
+            indiaNews={enrichmentData[run.symbol]?.indiaNews}
+            globalNews={enrichmentData[run.symbol]?.globalNews}
             isFirstTicker={index === 0}
             totalTickers={analysisData.runs.length}
           />
