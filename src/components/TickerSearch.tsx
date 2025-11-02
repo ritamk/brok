@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { searchTickers } from '../api/backend';
-import type { YahooSearchResult } from '../types/yahoo';
+import { useState, useEffect, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { searchTickers } from "../api/backend";
+import type { YahooSearchResult } from "../types/yahoo";
 
 interface TickerSearchProps {
   selectedTickers: YahooSearchResult[];
@@ -11,9 +11,13 @@ interface TickerSearchProps {
   onRemoveTicker: (symbol: string) => void;
 }
 
-export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: TickerSearchProps) {
-  const [query, setQuery] = useState('');
-  const [debouncedQuery, setDebouncedQuery] = useState('');
+export function TickerSearch({
+  selectedTickers,
+  onAddTicker,
+  onRemoveTicker,
+}: TickerSearchProps) {
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -30,15 +34,16 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
 
   // Search query
   const { data, isLoading } = useQuery({
-    queryKey: ['search', debouncedQuery],
+    queryKey: ["search", debouncedQuery],
     queryFn: () => searchTickers(debouncedQuery, 4),
     enabled: debouncedQuery.length > 0,
     staleTime: 5 * 60 * 1000, // 5 minutes
   });
 
-  const suggestions = data?.quotes?.filter(
-    (quote) => !selectedTickers.some((t) => t.symbol === quote.symbol)
-  ) || [];
+  const suggestions =
+    data?.quotes?.filter(
+      (quote) => !selectedTickers.some((t) => t.symbol === quote.symbol)
+    ) || [];
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -53,8 +58,8 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Keyboard navigation
@@ -62,21 +67,23 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
     if (!showDropdown || suggestions.length === 0) return;
 
     switch (e.key) {
-      case 'ArrowDown':
+      case "ArrowDown":
         e.preventDefault();
-        setSelectedIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : prev));
+        setSelectedIndex((prev) =>
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
         break;
-      case 'ArrowUp':
+      case "ArrowUp":
         e.preventDefault();
         setSelectedIndex((prev) => (prev > 0 ? prev - 1 : -1));
         break;
-      case 'Enter':
+      case "Enter":
         e.preventDefault();
         if (selectedIndex >= 0 && suggestions[selectedIndex]) {
           handleSelectTicker(suggestions[selectedIndex]);
         }
         break;
-      case 'Escape':
+      case "Escape":
         setShowDropdown(false);
         setSelectedIndex(-1);
         break;
@@ -85,8 +92,8 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
 
   const handleSelectTicker = (ticker: YahooSearchResult) => {
     onAddTicker(ticker);
-    setQuery('');
-    setDebouncedQuery('');
+    setQuery("");
+    setDebouncedQuery("");
     setShowDropdown(false);
     setSelectedIndex(-1);
     inputRef.current?.focus();
@@ -106,10 +113,10 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
           }}
           onFocus={() => setShowDropdown(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Search for stocks (e.g., Apollo Tyres, Infosys...)"
-          className="w-full px-4 py-3 bg-card border border-border rounded-lg text-text-primary placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent"
+          placeholder="Search for stocks (e.g., Nifty, HDFC, etc.)"
+          className="w-full px-4 py-3 bg-card border border-border rounded-lg text-text-primary placeholder-text-disabled focus:outline-none focus:ring-2 focus:ring-blue focus:border-transparent transition-all duration-250"
         />
-        
+
         {isLoading && (
           <div className="absolute right-3 top-3">
             <div className="animate-spin h-5 w-5 border-2 border-blue border-t-transparent rounded-full"></div>
@@ -126,15 +133,21 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
                 key={suggestion.symbol}
                 onClick={() => handleSelectTicker(suggestion)}
                 className={`w-full px-4 py-3 text-left hover:bg-card-hover transition-colors ${
-                  index === selectedIndex ? 'bg-card-hover' : ''
+                  index === selectedIndex ? "bg-card-hover" : ""
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-text-primary">{suggestion.symbol}</div>
-                    <div className="text-sm text-text-muted">{suggestion.name}</div>
+                    <div className="font-semibold text-text-primary">
+                      {suggestion.symbol}
+                    </div>
+                    <div className="text-sm text-text-muted">
+                      {suggestion.name}
+                    </div>
                   </div>
-                  <div className="text-xs text-text-disabled">{suggestion.exchDisp}</div>
+                  <div className="text-xs text-text-disabled">
+                    {suggestion.exchDisp}
+                  </div>
                 </div>
               </button>
             ))}
@@ -144,17 +157,22 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
 
       {/* Selected tickers chips */}
       {selectedTickers.length > 0 && (
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 overflow-hidden">
           {selectedTickers.map((ticker) => (
             <div
               key={ticker.symbol}
-              className="flex items-center gap-2 px-3 py-1.5 border-[1.5px] border-blue/70 rounded-full text-sm"
+              className="flex items-center gap-2 px-3 py-1.5 border-[1.5px] border-blue/70 rounded-full text-sm min-w-0 max-w-full shrink"
             >
-              <span className="font-semibold text-blue/90">{ticker.symbol}</span>
-              <span className="text-text-muted max-w-[150px] truncate">{ticker.name}</span>
+              <span className="font-semibold text-blue/90 whitespace-nowrap shrink-0">
+                {ticker.symbol}
+              </span>
+              <span className="relative text-text-muted min-w-0 max-w-[120px] sm:max-w-[150px] overflow-hidden">
+                <span className="whitespace-nowrap block">{ticker.name}</span>
+                <span className="absolute inset-y-0 right-0 w-8 bg-linear-to-r from-transparent to-white pointer-events-none"></span>
+              </span>
               <button
                 onClick={() => onRemoveTicker(ticker.symbol)}
-                className="ml-1 text-red/30 hover:text-red transition-color hover:scale-115 transition-scale"
+                className="ml-1 text-red/30 hover:text-red transition-color hover:scale-115 transition-scale shrink-0"
                 aria-label={`Remove ${ticker.symbol}`}
               >
                 <FontAwesomeIcon icon={faXmark} className="w-4 h-4" />
@@ -166,4 +184,3 @@ export function TickerSearch({ selectedTickers, onAddTicker, onRemoveTicker }: T
     </div>
   );
 }
-
