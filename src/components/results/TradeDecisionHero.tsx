@@ -42,7 +42,7 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
   );
 
   return (
-    <div className="bg-card border-2 border-border rounded-[16px] p-8 shadow-lg">
+    <div className="bg-card rounded-[16px] p-8 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
       {/* Decision Badge and Confidence */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex-1">
@@ -96,7 +96,7 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
 
       {/* Risk Notes */}
       {trade.risk_notes && (
-        <div className="mb-6 bg-yellow/10 border border-yellow/30 rounded-lg p-4">
+        <div className="mb-6 bg-yellow/10 rounded-lg p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
           <div className="flex items-start gap-2">
             <span className="text-yellow text-lg">⚠️</span>
             <div className="flex-1">
@@ -114,7 +114,7 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
           
           {/* Conflict/Agreement Badge */}
           {hasConflict && (
-            <div className="mb-4 bg-yellow/15 border border-yellow rounded-lg px-4 py-2 inline-flex items-center gap-2">
+            <div className="mb-4 bg-yellow/15 rounded-lg px-4 py-2 inline-flex items-center gap-2 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
               <span className="text-yellow text-lg">⚡</span>
               <span className="text-sm font-semibold text-yellow">Conflicting Signals Detected</span>
             </div>
@@ -122,7 +122,7 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Technical Signal */}
-            <div className="bg-card-hover/50 rounded-lg p-4 border border-border">
+            <div className="bg-card-hover/50 rounded-lg p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">{getSignalIcon(technicalSignal)}</span>
                 <div>
@@ -136,7 +136,7 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
             </div>
 
             {/* News Sentiment */}
-            <div className="bg-card-hover/50 rounded-lg p-4 border border-border">
+            <div className="bg-card-hover/50 rounded-lg p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-2xl">📰</span>
                 <div>

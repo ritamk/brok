@@ -70,20 +70,20 @@ export function NewsList({ news, backendSummary, keyDrivers, sentiment, sentimen
 
       {/* Backend AI Summary */}
       {backendSummary && (
-        <div className="bg-blue/20 border border-blue rounded-lg p-4">
-          <h4 className="font-semibold text-blue-light mb-2">AI News Summary</h4>
-          <p className="text-text-secondary text-sm leading-relaxed">{backendSummary}</p>
+        <div className="bg-blue-light/10 rounded-lg p-5 shadow-[0_0_15px_0_rgba(0,0,0,0.05)]">
+          <h4 className="font-semibold text-blue-light mb-3 text-base">AI News Summary</h4>
+          <p className="text-text-primary text-sm leading-relaxed">{backendSummary}</p>
         </div>
       )}
 
       {/* Key Drivers */}
       {keyDrivers && keyDrivers.length > 0 && (
-        <div className="bg-purple/20 border border-purple rounded-lg p-4">
-          <h4 className="font-semibold text-purple-light mb-2">Key Drivers</h4>
-          <ul className="space-y-1">
+        <div className="bg-green/10 rounded-lg p-5 shadow-[0_0_15px_0_rgba(0,0,0,0.05)]">
+          <h4 className="font-semibold text-green mb-3 text-base">Key Drivers</h4>
+          <ul className="space-y-2">
             {keyDrivers.map((driver, index) => (
-              <li key={index} className="text-text-secondary text-sm flex items-start gap-2">
-                <span className="text-purple-light mt-1">•</span>
+              <li key={index} className="text-text-primary text-sm flex items-start gap-2">
+                <span className="text-green mt-1">•</span>
                 <span>{driver}</span>
               </li>
             ))}
@@ -102,7 +102,7 @@ export function NewsList({ news, backendSummary, keyDrivers, sentiment, sentimen
                 href={item.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block bg-card border border-border rounded-lg p-3 hover:border-border-light hover:bg-card-hover transition-colors"
+                className="block bg-card rounded-lg p-3 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] hover:shadow-[0_0_15px_0_rgba(0,0,0,0.1)] transition-shadow"
               >
                 <div className="flex gap-3">
                   {item.thumbnail?.resolutions?.[0]?.url && (

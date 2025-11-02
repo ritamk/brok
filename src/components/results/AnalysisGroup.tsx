@@ -59,10 +59,10 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
   const showCollapsible = totalTickers > 1;
 
   return (
-    <div className="bg-card border-2 border-border rounded-[16px] overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      {/* Header - Always visible, clickable when collapsible */}
+    <div className="space-y-6">
+      {/* Stock Header Card */}
       <div
-        className={`px-6 py-5 border-b border-border ${showCollapsible ? 'cursor-pointer hover:bg-card-hover' : ''} transition-colors`}
+        className={`bg-card rounded-[16px] px-6 py-5 shadow-[0_0_20px_0_rgba(0,0,0,0.07)] ${showCollapsible ? 'cursor-pointer hover:shadow-[0_0_25px_0_rgba(0,0,0,0.12)]' : ''} transition-shadow`}
         onClick={() => showCollapsible && setIsExpanded(!isExpanded)}
       >
         <div className="flex items-center justify-between">
@@ -115,10 +115,10 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
 
       {/* Expandable Content */}
       {isExpanded && (
-        <div className="animate-fadeIn">
-          {/* Timeframe Selector (if multiple timeframes) */}
+        <div className="animate-fadeIn space-y-6">
+          {/* Timeframe Selector Card (if multiple timeframes) */}
           {run.results.length > 1 && (
-            <div className="px-6 py-4 bg-card-hover/30 border-b border-border">
+            <div className="bg-card rounded-[16px] px-6 py-4 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-text-muted font-medium">Timeframe:</span>
                 <div className="flex gap-2">
@@ -128,8 +128,8 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
                       onClick={() => setSelectedTimeframeIndex(index)}
                       className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
                         selectedTimeframeIndex === index
-                          ? 'bg-blue text-white shadow-md'
-                          : 'bg-card border border-border text-text-secondary hover:bg-card-hover hover:border-blue/50'
+                          ? 'bg-blue text-white shadow-[0_0_15px_0_rgba(0,0,0,0.15)]'
+                          : 'bg-card-hover text-text-secondary hover:bg-card-hover/70 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]'
                       }`}
                     >
                       {result.timeframe}
@@ -141,15 +141,13 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
           )}
 
           {/* Active Timeframe Panel */}
-          <div className="p-6">
-            {run.results[selectedTimeframeIndex] && (
-              <TimeframePanel
-                result={run.results[selectedTimeframeIndex]}
-                yahooNews={yahooNews}
-                currentPrice={quoteSummary?.regularMarketPrice}
-              />
-            )}
-          </div>
+          {run.results[selectedTimeframeIndex] && (
+            <TimeframePanel
+              result={run.results[selectedTimeframeIndex]}
+              yahooNews={yahooNews}
+              currentPrice={quoteSummary?.regularMarketPrice}
+            />
+          )}
         </div>
       )}
     </div>
