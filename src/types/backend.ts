@@ -67,17 +67,23 @@ export interface RiskAssessment {
 }
 
 export interface NewsAnalysis {
-  summary: string;
   sentiment: string;
+  summary: string;
   confidence?: number;
-  key_drivers?: string[];
   drivers?: string[];
-  headlines?: Array<{
-    title: string;
-    source: string;
-    url?: string;
-    published?: string;
-  }>;
+}
+
+export interface NewsPayloadHeadline {
+  title: string;
+  url: string;
+  source: string;
+}
+
+export interface NewsPayload {
+  symbol: string;
+  symbol_headlines: NewsPayloadHeadline[];
+  india_headlines: NewsPayloadHeadline[];
+  global_headlines: NewsPayloadHeadline[];
 }
 
 export interface MetaInfo {
@@ -108,7 +114,11 @@ export interface TimeframeResult {
 
 export interface SymbolRun {
   symbol: string;
+  long_name: string;
+  price: number;
+  change: string;
   results: TimeframeResult[];
+  news_payload?: NewsPayload;
   error?: string;
 }
 

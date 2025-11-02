@@ -12,7 +12,10 @@ function App() {
       {/* Header */}
       <header>
         <div className="container mx-auto px-4 py-6">
-          <h1 className="text-5xl font-bold text-blue font-brand">
+          <h1
+            className="text-5xl font-bold text-blue font-brand cursor-pointer"
+            onClick={() => window.location.pathname = '/'}
+          >
             brok
           </h1>
           <p className="text-text-primary/90 mt-1">{'let\'s make money'}</p>

@@ -1,26 +1,16 @@
 import type { YahooNewsItem } from '../../types/yahoo';
 
 interface NewsListProps {
-  news: YahooNewsItem[];
+  symbolNews: YahooNewsItem[];
+  indiaNews: YahooNewsItem[];
+  globalNews: YahooNewsItem[];
   backendSummary?: string;
   keyDrivers?: string[];
   sentiment?: string;
   sentimentConfidence?: number;
 }
 
-export function NewsList({ news, backendSummary, keyDrivers, sentiment, sentimentConfidence }: NewsListProps) {
-  const formatDate = (timestamp: number) => {
-    const date = new Date(timestamp * 1000);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffHours / 24);
-
-    if (diffHours < 1) return 'Just now';
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
-    return date.toLocaleDateString();
-  };
+export function NewsList({ symbolNews, indiaNews, globalNews, backendSummary, keyDrivers, sentiment, sentimentConfidence }: NewsListProps) {
 
   const getSentimentColor = (sent?: string) => {
     if (!sent) return { bg: 'bg-card-hover', text: 'text-text-primary', border: 'border-border' };
@@ -38,6 +28,47 @@ export function NewsList({ news, backendSummary, keyDrivers, sentiment, sentimen
   };
 
   const sentimentColors = getSentimentColor(sentiment);
+
+  const renderNewsList = (items: YahooNewsItem[], maxItems: number = 8) => {
+    if (items.length === 0) return null;
+    
+    return (
+      <div className="space-y-3">
+        {items.slice(0, maxItems).map((item) => (
+          <a
+            key={item.uuid}
+            href={item.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block bg-card rounded-lg p-3 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] hover:shadow-[0_0_15px_0_rgba(0,0,0,0.1)] transition-shadow"
+          >
+            <div className="flex gap-3">
+              {item.thumbnail?.resolutions?.[0]?.url && (
+                <img
+                  src={item.thumbnail.resolutions[0].url}
+                  alt=""
+                  className="w-16 h-16 object-cover rounded shrink-0"
+                />
+              )}
+              <div className="flex-1 min-w-0">
+                <h5 className="font-medium text-text-primary text-sm line-clamp-2 mb-1">
+                  {item.title}
+                </h5>
+                <div className="flex items-center gap-2 text-xs text-text-disabled">
+                  <span>{item.publisher}</span>
+                </div>
+              </div>
+              <svg className="w-4 h-4 text-text-disabled shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </div>
+          </a>
+        ))}
+      </div>
+    );
+  };
+
+  const hasAnyNews = symbolNews.length > 0 || indiaNews.length > 0 || globalNews.length > 0;
 
   return (
     <div className="space-y-4">
@@ -92,47 +123,63 @@ export function NewsList({ news, backendSummary, keyDrivers, sentiment, sentimen
       )}
 
       {/* News Headlines */}
-      {news.length > 0 && (
-        <div>
-          <h4 className="font-semibold text-text-secondary mb-3">Latest Headlines</h4>
-          <div className="space-y-3">
-            {news.slice(0, 5).map((item) => (
-              <a
-                key={item.uuid}
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block bg-card rounded-lg p-3 shadow-[0_0_10px_0_rgba(0,0,0,0.05)] hover:shadow-[0_0_15px_0_rgba(0,0,0,0.1)] transition-shadow"
-              >
-                <div className="flex gap-3">
-                  {item.thumbnail?.resolutions?.[0]?.url && (
-                    <img
-                      src={item.thumbnail.resolutions[0].url}
-                      alt=""
-                      className="w-16 h-16 object-cover rounded shrink-0"
-                    />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <h5 className="font-medium text-text-primary text-sm line-clamp-2 mb-1">
-                      {item.title}
-                    </h5>
-                    <div className="flex items-center gap-2 text-xs text-text-disabled">
-                      <span>{item.publisher}</span>
-                      <span>•</span>
-                      <span>{formatDate(item.providerPublishTime)}</span>
-                    </div>
-                  </div>
-                  <svg className="w-4 h-4 text-text-disabled shrink-0 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </div>
-              </a>
-            ))}
-          </div>
+      {hasAnyNews && (
+        <div className="space-y-4">
+          {/* Symbol Headlines - Always visible */}
+          {symbolNews.length > 0 && (
+            <div>
+              <h4 className="font-semibold text-text-secondary mb-3">Latest Headlines</h4>
+              {renderNewsList(symbolNews)}
+            </div>
+          )}
+
+          {/* India Headlines - Collapsed */}
+          {indiaNews.length > 0 && (
+            <details className="group">
+              <summary className="cursor-pointer flex items-center justify-between py-2 px-3 bg-card-hover/50 rounded-lg hover:bg-card-hover transition-colors">
+                <span className="font-semibold text-text-secondary text-sm">
+                  India Market News ({indiaNews.length})
+                </span>
+                <svg
+                  className="w-4 h-4 text-text-muted transition-transform group-open:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="mt-3">
+                {renderNewsList(indiaNews)}
+              </div>
+            </details>
+          )}
+
+          {/* Global Headlines - Collapsed */}
+          {globalNews.length > 0 && (
+            <details className="group">
+              <summary className="cursor-pointer flex items-center justify-between py-2 px-3 bg-card-hover/50 rounded-lg hover:bg-card-hover transition-colors">
+                <span className="font-semibold text-text-secondary text-sm">
+                  Global Market News ({globalNews.length})
+                </span>
+                <svg
+                  className="w-4 h-4 text-text-muted transition-transform group-open:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="mt-3">
+                {renderNewsList(globalNews)}
+              </div>
+            </details>
+          )}
         </div>
       )}
 
-      {!backendSummary && !keyDrivers && news.length === 0 && (
+      {!backendSummary && !keyDrivers && !hasAnyNews && (
         <div className="text-text-disabled text-sm text-center py-4">No news available</div>
       )}
     </div>

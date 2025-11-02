@@ -6,12 +6,14 @@ import { TimeframePanel } from './TimeframePanel';
 interface AnalysisGroupProps {
   run: SymbolRun;
   quoteSummary?: YahooQuoteSummary;
-  yahooNews?: YahooNewsItem[];
+  symbolNews?: YahooNewsItem[];
+  indiaNews?: YahooNewsItem[];
+  globalNews?: YahooNewsItem[];
   isFirstTicker?: boolean;
   totalTickers?: number;
 }
 
-export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker = false, totalTickers = 1 }: AnalysisGroupProps) {
+export function AnalysisGroup({ run, quoteSummary, symbolNews = [], indiaNews = [], globalNews = [], isFirstTicker = false, totalTickers = 1 }: AnalysisGroupProps) {
   const [isExpanded, setIsExpanded] = useState(isFirstTicker);
   const [selectedTimeframeIndex, setSelectedTimeframeIndex] = useState(0);
 
@@ -32,13 +34,20 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
     return price.toFixed(2);
   };
 
-  const formatChange = (change?: number | null, changePercent?: number | null) => {
-    if (!isFiniteNumber(change) || !isFiniteNumber(changePercent)) return 'N/A';
-    const sign = change >= 0 ? '+' : '';
-    const color = change >= 0 ? 'text-green' : 'text-red';
+  const formatChange = (change?: string | null) => {
+    if (!change || typeof change !== 'string') return 'N/A';
+    
+    // Parse the change string (e.g., "2.46%" or "-1.13%")
+    const numericValue = parseFloat(change.replace('%', ''));
+    if (isNaN(numericValue)) return 'N/A';
+    
+    const isPositive = numericValue >= 0;
+    const sign = isPositive ? '+' : '';
+    const color = isPositive ? 'text-green' : 'text-red';
+    
     return (
       <span className={color}>
-        {sign}{change.toFixed(2)} ({sign}{changePercent.toFixed(2)}%)
+        {sign}{change}
       </span>
     );
   };
@@ -84,11 +93,11 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
             {/* Symbol and Company Name */}
             <div className="flex-1">
               <h2 className="text-2xl font-bold text-text-primary">{run.symbol}</h2>
-              {quoteSummary && (
+              {run.long_name ? (
                 <p className="text-text-muted text-sm mt-1">
-                  {quoteSummary.longName || quoteSummary.shortName || 'Company Name'}
+                  {run.long_name}
                 </p>
-              )}
+              ) : null}
             </div>
 
             {/* Decision Badge (when collapsed) */}
@@ -100,16 +109,17 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
           </div>
 
           {/* Price Info */}
-          {quoteSummary && (
-            <div className="text-right ml-4">
-              <div className="text-2xl font-bold text-text-primary">
-                {quoteSummary.currency} {formatPrice(quoteSummary.regularMarketPrice)}
-              </div>
-              <div className="text-sm mt-1">
-                {formatChange(quoteSummary.regularMarketChange, quoteSummary.regularMarketChangePercent)}
-              </div>
+          <div className="text-right ml-4">
+            <div className="text-2xl font-bold text-text-primary">
+              {run.symbol.includes('NS') || run.symbol.includes('BO')
+                ? `₹ ${formatPrice(run.price)}`
+                : `${quoteSummary?.currency || ''} ${formatPrice(run.price)}`
+              }
             </div>
-          )}
+            <div className="text-sm mt-1">
+              {formatChange(run.change)}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -144,8 +154,10 @@ export function AnalysisGroup({ run, quoteSummary, yahooNews = [], isFirstTicker
           {run.results[selectedTimeframeIndex] && (
             <TimeframePanel
               result={run.results[selectedTimeframeIndex]}
-              yahooNews={yahooNews}
-              currentPrice={quoteSummary?.regularMarketPrice}
+              symbolNews={symbolNews}
+              indiaNews={indiaNews}
+              globalNews={globalNews}
+              currentPrice={run.price}
             />
           )}
         </div>
