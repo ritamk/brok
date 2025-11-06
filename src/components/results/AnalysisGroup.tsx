@@ -13,7 +13,7 @@ interface AnalysisGroupProps {
   totalTickers?: number;
 }
 
-export function AnalysisGroup({ run, quoteSummary, symbolNews = [], indiaNews = [], globalNews = [], isFirstTicker = false, totalTickers = 1 }: AnalysisGroupProps) {
+export function AnalysisGroup({ run, symbolNews = [], indiaNews = [], globalNews = [], isFirstTicker = false, totalTickers = 1 }: AnalysisGroupProps) {
   const [isExpanded, setIsExpanded] = useState(isFirstTicker);
   const [selectedTimeframeIndex, setSelectedTimeframeIndex] = useState(0);
 
@@ -90,14 +90,27 @@ export function AnalysisGroup({ run, quoteSummary, symbolNews = [], indiaNews = 
               </div>
             )}
 
-            {/* Symbol and Company Name */}
-            <div className="flex-1">
-              <h2 className="text-2xl font-bold text-text-primary">{run.symbol}</h2>
+            {/* Company Name Link */}
+            <div className="w-1/2">
               {run.long_name ? (
-                <p className="text-text-muted text-sm mt-1">
+                <a 
+                  href={`https://finance.yahoo.com/quote/${encodeURIComponent(run.symbol)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg font-semibold text-blue hover:underline"
+                >
                   {run.long_name}
-                </p>
-              ) : null}
+                </a>
+              ) : (
+                <a 
+                  href={`https://finance.yahoo.com/quote/${encodeURIComponent(run.symbol)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-lg font-semibold text-blue hover:underline"
+                >
+                  {run.symbol}
+                </a>
+              )}
             </div>
 
             {/* Decision Badge (when collapsed) */}
@@ -111,9 +124,9 @@ export function AnalysisGroup({ run, quoteSummary, symbolNews = [], indiaNews = 
           {/* Price Info */}
           <div className="text-right ml-4">
             <div className="text-2xl font-bold text-text-primary">
-              {run.symbol.includes('NS') || run.symbol.includes('BO')
+              {run.currency === 'INR'
                 ? `₹ ${formatPrice(run.price)}`
-                : `${quoteSummary?.currency || ''} ${formatPrice(run.price)}`
+                : run.currency === 'USD' ? `$ ${formatPrice(run.price)}` : `${run.currency || ''} ${formatPrice(run.price)}`
               }
             </div>
             <div className="text-sm mt-1">
@@ -153,6 +166,7 @@ export function AnalysisGroup({ run, quoteSummary, symbolNews = [], indiaNews = 
           {/* Active Timeframe Panel */}
           {run.results[selectedTimeframeIndex] && (
             <TimeframePanel
+              currency={run.currency}
               result={run.results[selectedTimeframeIndex]}
               symbolNews={symbolNews}
               indiaNews={indiaNews}

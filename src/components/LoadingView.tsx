@@ -29,63 +29,93 @@ interface LoadingViewProps {
 
 const DEBATE_MESSAGES: DebateMessage[] = [
   // Opening statements
-  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "PE ratio is screaming overvaluation. I wish someone valued my job as much.", emoji: faFaceTired, color: 'text-blue' },
-  { agent: 'Quant AI', role: 'Quantitative Models', message: "My model disagrees. Also, it has feelings now. It's upset.", emoji: faFaceSmileWink, color: 'text-purple' },
+  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "This stock is expensive. Like, really expensive. I wish someone valued my job this much.", emoji: faFaceTired, color: 'text-blue' },
+  { agent: 'Quant AI', role: 'Quantitative Models', message: "My algorithm disagrees. Also, it has feelings now. It's upset.", emoji: faFaceSmileWink, color: 'text-purple' },
   { agent: 'Macro AI', role: 'Market Sentiment', message: "Guys... elections next month. Or was it last month? Time is a construct.", emoji: faFaceSurprise, color: 'text-highlight' },
-  { agent: 'Risk AI', role: 'Risk Management', message: "Someone please include stop-loss in this conversation, or I'll lose my job.", emoji: faFaceRollingEyes, color: 'text-red' },
+  { agent: 'Risk AI', role: 'Risk Management', message: "Can we talk about what happens if this goes wrong?", emoji: faFaceRollingEyes, color: 'text-red' },
   
-  // Technical analysis
-  { agent: 'Quant AI', role: 'Quantitative Models', message: (p) => p > 30 ? "Still calculating. My GPU is literally sweating." : "RSI at 72. We're in overbought territory, folks.", emoji: faFaceMeh, color: 'text-purple' },
-  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "Earnings growth is 35% YoY. But who's counting. (I am. I'm always counting.)", emoji: faFaceSmile, color: 'text-blue' },
-  { agent: 'Risk AI', role: 'Risk Management', message: "Great. Now calculate the downside risk before celebrating. I'll wait.", emoji: faFaceSadTear, color: 'text-red' },
-  { agent: 'Macro AI', role: 'Market Sentiment', message: (_p, d) => d > 60 ? "This is taking longer than the Fed's last meeting. Just saying..." : "Fed meeting in 2 weeks. Just saying...", emoji: faFaceMeh, color: 'text-highlight' },
+  // Analysis phase
+  { agent: 'Quant AI', role: 'Quantitative Models', message: (p) => p > 30 ? "Still calculating. My computer is literally sweating." : "The numbers look good. Like, really good. Trust me, I'm a robot.", emoji: faFaceMeh, color: 'text-purple' },
+  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "The company is making money. A lot of it. But who's counting? (I am. I'm always counting.)", emoji: faFaceSmile, color: 'text-blue' },
+  { agent: 'Risk AI', role: 'Risk Management', message: "Great. Now let's talk about what could go wrong before celebrating. I'll wait.", emoji: faFaceSadTear, color: 'text-red' },
+  { agent: 'Macro AI', role: 'Market Sentiment', message: (_p, d) => d > 60 ? "This is taking longer than a government meeting. Just saying..." : "Michael Burry just shorted this, We are all about to get rich", emoji: faFaceMeh, color: 'text-highlight' },
   
   // Market conditions
-  { agent: 'Macro AI', role: 'Market Sentiment', message: "Social media buzz down 40%. Turns out nobody cares. Shocking.", emoji: faFaceSurprise, color: 'text-highlight' },
-  { agent: 'Quant AI', role: 'Quantitative Models', message: (p) => p > 50 ? "MACD crossover detected. This is taking forever. Both are true." : "MACD crossover detected. This is textbook bullish.", emoji: faFaceLaughSquint, color: 'text-purple' },
-  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "Cash flow is king. And this company has plenty. Unlike my patience.", emoji: faFaceSmileWink, color: 'text-blue' },
-  { agent: 'Risk AI', role: 'Risk Management', message: "Beta is 1.8. This moves FAST. Unlike this analysis, apparently.", emoji: faFaceTired, color: 'text-red' },
+  { agent: 'Macro AI', role: 'Market Sentiment', message: "Social media buzz is down. Turns out nobody cares. Shocking.", emoji: faFaceSurprise, color: 'text-highlight' },
+  { agent: 'Quant AI', role: 'Quantitative Models', message: (p) => p > 50 ? "The trend looks good. This is taking forever. Both are true." : "The trend looks good. Like, really good.", emoji: faFaceLaughSquint, color: 'text-purple' },
+  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "The company has cash. Lots of it. Unlike my patience right now.", emoji: faFaceSmileWink, color: 'text-blue' },
+  { agent: 'Risk AI', role: 'Risk Management', message: "This stock moves fast. Like, really fast. Unlike this analysis, apparently.", emoji: faFaceTired, color: 'text-red' },
   
   // Risk assessment
-  { agent: 'Risk AI', role: 'Risk Management', message: (_p, d) => d > 90 ? "Volatility index spiking. Also, I've aged 3 years waiting for this." : "Volatility index spiking. Everyone buckle up.", emoji: faFaceSurprise, color: 'text-red' },
-  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "Book value is solid. There's a floor here. Emotionally, I'm through it.", emoji: faFaceSmile, color: 'text-blue' },
-  { agent: 'Macro AI', role: 'Market Sentiment', message: "Sector rotation happening. Tech money flowing to value. Or to coffee. Hard to tell.", emoji: faFaceSmileWink, color: 'text-highlight' },
-  { agent: 'Quant AI', role: 'Quantitative Models', message: (p) => p > 60 ? "My neural network says 'buy'. It also says 'please end this meeting'." : "My neural network says 'buy'. It's rarely wrong... lately.", emoji: faFaceRollingEyes, color: 'text-purple' },
+  { agent: 'Risk AI', role: 'Risk Management', message: (_p, d) => d > 90 ? "Things are getting wild out there. Also, I've aged 3 years waiting for this." : "Things are getting wild out there. Everyone buckle up.", emoji: faFaceSurprise, color: 'text-red' },
+  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "The company has solid foundations. There's a floor here. Emotionally, I'm through it.", emoji: faFaceSmile, color: 'text-blue' },
+  { agent: 'Macro AI', role: 'Market Sentiment', message: "Money is moving around. Tech money flowing to other stuff. Or to coffee. Hard to tell.", emoji: faFaceSmileWink, color: 'text-highlight' },
+  { agent: 'Quant AI', role: 'Quantitative Models', message: (p) => p > 60 ? "My brain says 'buy'. It also says 'please end this meeting'." : "My brain says 'buy'. It's rarely wrong... lately.", emoji: faFaceRollingEyes, color: 'text-purple' },
   
   // Final arguments
-  { agent: 'Quant AI', role: 'Quantitative Models', message: (_p, d) => d > 120 ? "Bollinger Bands tightening. Unlike this debate, which is infinite." : "Bollinger Bands are tightening. Big move incoming.", emoji: faFaceSurprise, color: 'text-purple' },
-  { agent: 'Macro AI', role: 'Market Sentiment', message: "Institutional ownership up 12%. Smart money is moving. Faster than us.", emoji: faFaceSmile, color: 'text-highlight' },
-  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "Dividend yield is attractive. That's real money. Which I could be earning right now.", emoji: faFaceSmileWink, color: 'text-blue' },
-  { agent: 'Risk AI', role: 'Risk Management', message: (p) => p > 70 ? "Max drawdown potential: 23%. My sanity drawdown: 97%." : "Max drawdown potential: 23%. Can you handle that?", emoji: faFaceMeh, color: 'text-red' },
+  { agent: 'Quant AI', role: 'Quantitative Models', message: (_p, d) => d > 120 ? "Something big is coming. Unlike this debate, which is infinite." : "Something big is coming. You can feel it.", emoji: faFaceSurprise, color: 'text-purple' },
+  { agent: 'Macro AI', role: 'Market Sentiment', message: "Big investors are buying. Smart money is moving. Faster than us.", emoji: faFaceSmile, color: 'text-highlight' },
+  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: "They pay dividends. That's real money. Which I could be earning right now.", emoji: faFaceSmileWink, color: 'text-blue' },
+  { agent: 'Risk AI', role: 'Risk Management', message: (p) => p > 70 ? "Could drop 23% if things go bad. My sanity drop: 97%." : "Could drop 23% if things go bad. Can you handle that?", emoji: faFaceMeh, color: 'text-red' },
   
   // Consensus building
-  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: (_p, d) => d > 150 ? "Fine, the technicals look decent. Can we wrap this up? I have 47 other stocks to analyze." : "Okay, I'll admit the technicals look decent...", emoji: faFaceMeh, color: 'text-blue' },
-  { agent: 'Quant AI', role: 'Quantitative Models', message: "And yes, fundamentals provide some safety net. Groundbreaking stuff.", emoji: faFaceSmile, color: 'text-purple' },
-  { agent: 'Macro AI', role: 'Market Sentiment', message: (p) => p > 80 ? "Market timing is tricky. So is finishing this analysis, apparently." : "Market timing is tricky, but conditions are... interesting.", emoji: faFaceSmileWink, color: 'text-highlight' },
-  { agent: 'Risk AI', role: 'Risk Management', message: (_p, d) => d > 180 ? "With proper position sizing, this could work. Unlike our time management." : "With proper position sizing, this could work.", emoji: faFaceSmile, color: 'text-red' }
+  { agent: 'Value Investor AI', role: 'Fundamental Analysis', message: (_p, d) => d > 150 ? "Fine, it looks decent. Can we wrap this up? I have 47 other stocks to analyze." : "Okay, I'll admit it looks decent...", emoji: faFaceMeh, color: 'text-blue' },
+  { agent: 'Quant AI', role: 'Quantitative Models', message: "And yes, the basics are solid. Groundbreaking stuff.", emoji: faFaceSmile, color: 'text-purple' },
+  { agent: 'Macro AI', role: 'Market Sentiment', message: (p) => p > 80 ? "Timing is tricky. So is finishing this analysis, apparently." : "Timing is tricky, but conditions are... interesting.", emoji: faFaceSmileWink, color: 'text-highlight' },
+  { agent: 'Risk AI', role: 'Risk Management', message: (_p, d) => d > 180 ? "If you don't bet too much, this could work. Unlike our time management." : "If you don't bet too much, this could work.", emoji: faFaceSmile, color: 'text-red' }
 ];
 
+/**
+ * Shuffles debate messages while ensuring:
+ * - No back-to-back messages from the same agent
+ * - Random starting message each time
+ */
+function shuffleMessagesWithConstraints(messages: DebateMessage[]): DebateMessage[] {
+  const shuffled = [...messages];
+  let isValid = false;
+  let attempts = 0;
+  const maxAttempts = 100;
+
+  while (!isValid && attempts < maxAttempts) {
+    attempts++;
+    
+    // Fisher-Yates shuffle
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Check if valid: no consecutive messages from same agent
+    isValid = true;
+    for (let i = 0; i < shuffled.length - 1; i++) {
+      if (shuffled[i].agent === shuffled[i + 1].agent) {
+        isValid = false;
+        break;
+      }
+    }
+  }
+
+  return shuffled;
+}
+
 export function LoadingView({ tickerCount = 1, timeframeCount = 1 }: LoadingViewProps) {
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(() => 
-    Math.floor(Math.random() * DEBATE_MESSAGES.length)
-  );
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [shuffledMessages, setShuffledMessages] = useState<DebateMessage[]>([]);
 
   // Calculate expected duration: tickerCount * timeframeCount * 20 seconds
   const expectedDuration = tickerCount * timeframeCount * 20;
+
+  // Initialize shuffled messages on mount
+  useEffect(() => {
+    setShuffledMessages(shuffleMessagesWithConstraints(DEBATE_MESSAGES));
+  }, []);
 
   useEffect(() => {
     const startTime = Date.now();
 
     const messageInterval = setInterval(() => {
-      setCurrentMessageIndex((prev) => {
-        // Pick a random index different from the current one
-        let newIndex;
-        do {
-          newIndex = Math.floor(Math.random() * DEBATE_MESSAGES.length);
-        } while (newIndex === prev && DEBATE_MESSAGES.length > 1);
-        return newIndex;
-      });
+      setCurrentMessageIndex((prev) => (prev + 1) % (shuffledMessages.length || DEBATE_MESSAGES.length));
     }, 3500); // Change message every 3.5 seconds
 
     // Update progress based on actual elapsed time vs expected duration
@@ -101,7 +131,9 @@ export function LoadingView({ tickerCount = 1, timeframeCount = 1 }: LoadingView
       clearInterval(messageInterval);
       clearInterval(progressInterval);
     };
-  }, [expectedDuration]);
+  }, [expectedDuration, shuffledMessages.length]);
+
+  const messagesToDisplay = shuffledMessages.length > 0 ? shuffledMessages : DEBATE_MESSAGES;
 
   return (
     <div className="fixed inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-center justify-center">
@@ -126,7 +158,7 @@ export function LoadingView({ tickerCount = 1, timeframeCount = 1 }: LoadingView
             className="flex flex-col transition-transform duration-700 ease-in-out"
             style={{ transform: `translateY(-${currentMessageIndex * 5}rem)` }}
           >
-            {DEBATE_MESSAGES.map((msg, index) => {
+            {messagesToDisplay.map((msg, index) => {
               const messageText = typeof msg.message === 'function' 
                 ? msg.message(progress, expectedDuration) 
                 : msg.message;
