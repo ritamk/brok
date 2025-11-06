@@ -55,6 +55,7 @@ export interface TradeDecision {
   alignment?: {
     technical: string;
     news: string;
+    fundamental?: string;
   };
 }
 
@@ -71,6 +72,38 @@ export interface NewsAnalysis {
   summary: string;
   confidence?: number;
   drivers?: string[];
+}
+
+export interface FundamentalMetrics {
+  pe_ratio?: number;
+  pb_ratio?: number;
+  roe?: number;
+  debt_to_equity?: number;
+  profit_margin?: number;
+  operating_margin?: number;
+  gross_margin?: number;
+  revenue_growth?: number;
+  earnings_growth?: number;
+  ev_ebitda?: number;
+  market_cap?: number;
+  institutional_holdings?: number;
+  insider_holdings?: number;
+  [key: string]: unknown;
+}
+
+export interface FundamentalAnalysis {
+  signal: 'buy' | 'sell' | 'hold' | 'neutral' | 'fair' | 'overvalued' | 'undervalued';
+  confidence: number;
+  summary: string;
+  metrics: FundamentalMetrics;
+  drivers?: string[];
+}
+
+export interface FundamentalPayload {
+  symbol: string;
+  timestamp: string;
+  metrics: Record<string, string>;
+  raw_metrics: Record<string, number | string>;
 }
 
 export interface NewsPayloadHeadline {
@@ -109,6 +142,7 @@ export interface TimeframeResult {
   trade: TradeDecision;
   risk: RiskAssessment;
   news: NewsAnalysis;
+  fundamental?: FundamentalAnalysis;
   meta?: MetaInfo;
 }
 
@@ -116,9 +150,12 @@ export interface SymbolRun {
   symbol: string;
   long_name: string;
   price: number;
+  currency: string;
   change: string;
   results: TimeframeResult[];
   news_payload?: NewsPayload;
+  fundamental?: FundamentalAnalysis;
+  fundamental_payload?: FundamentalPayload;
   error?: string;
 }
 

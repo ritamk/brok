@@ -5,6 +5,7 @@ import { IndicatorGauges } from './IndicatorGauges';
 import { NewsList } from './NewsList';
 
 interface TimeframePanelProps {
+  currency: string;
   result: TimeframeResult;
   symbolNews: YahooNewsItem[];
   indiaNews: YahooNewsItem[];
@@ -12,8 +13,8 @@ interface TimeframePanelProps {
   currentPrice?: number;
 }
 
-export function TimeframePanel({ result, symbolNews, indiaNews, globalNews, currentPrice }: TimeframePanelProps) {
-  const { technical, trade, news, meta } = result;
+export function TimeframePanel({ currency, result, symbolNews, indiaNews, globalNews, currentPrice }: TimeframePanelProps) {
+  const { technical, trade, news, fundamental, meta } = result;
 
   return (
     <div className="space-y-6">
@@ -22,6 +23,7 @@ export function TimeframePanel({ result, symbolNews, indiaNews, globalNews, curr
         trade={trade}
         news={news}
         technicalSignal={technical.signal}
+        fundamental={fundamental}
       />
 
       {/* Technical Analysis Card */}
@@ -98,6 +100,148 @@ export function TimeframePanel({ result, symbolNews, indiaNews, globalNews, curr
           <IndicatorGauges indicators={technical.indicators} currentPrice={currentPrice} />
         </div>
       </div>
+
+      {/* Fundamental Analysis Card */}
+      {fundamental && (
+        <div className="bg-card rounded-[16px] p-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
+          <div className="mb-6">
+            <h3 className="text-lg font-semibold text-text-primary mb-2">Fundamental Analysis</h3>
+            <div className="flex items-center gap-4 flex-wrap">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-text-muted">Signal:</span>
+                <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                  fundamental.signal === 'buy' || fundamental.signal === 'undervalued' ? 'bg-green text-white' :
+                  fundamental.signal === 'sell' || fundamental.signal === 'overvalued' ? 'bg-red text-white' :
+                  'bg-yellow text-white'
+                }`}>
+                  {fundamental.signal.toUpperCase()}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-text-muted">Confidence:</span>
+                <span className="text-sm font-semibold text-text-primary">
+                  {Math.round(fundamental.confidence * 100)}%
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Summary */}
+          <div className="mb-6">
+            <div className="text-sm text-text-muted mb-2 font-medium">Summary</div>
+            <p className="text-text-secondary leading-relaxed">{fundamental.summary}</p>
+          </div>
+
+          {/* Drivers */}
+          {fundamental.drivers && fundamental.drivers.length > 0 && (
+            <div className="mb-6">
+              <div className="text-sm text-text-muted mb-2 font-medium">Key Drivers</div>
+              <div className="flex flex-wrap gap-2">
+                {fundamental.drivers.map((driver, index) => (
+                  <span
+                    key={index}
+                    className="px-3 py-1 bg-blue/10 rounded-full text-xs text-blue font-medium"
+                  >
+                    {driver}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Key Metrics */}
+          <div className="bg-card-hover/50 rounded-lg p-4">
+            <div className="text-sm text-text-muted mb-3 font-medium">Key Metrics</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {fundamental.metrics.pe_ratio !== undefined && fundamental.metrics.pe_ratio !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">P/E Ratio</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.pe_ratio.toFixed(2)}</div>
+                </div>
+              )}
+              {fundamental.metrics.pb_ratio !== undefined && fundamental.metrics.pb_ratio !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">P/B Ratio</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.pb_ratio.toFixed(2)}</div>
+                </div>
+              )}
+              {fundamental.metrics.roe !== undefined && fundamental.metrics.roe !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">ROE</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.roe.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.debt_to_equity !== undefined && fundamental.metrics.debt_to_equity !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Debt/Equity</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.debt_to_equity.toFixed(2)}</div>
+                </div>
+              )}
+              {fundamental.metrics.profit_margin !== undefined && fundamental.metrics.profit_margin !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Profit Margin</div>
+                  <div className="text-lg font-bold text-green">{fundamental.metrics.profit_margin.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.operating_margin !== undefined && fundamental.metrics.operating_margin !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Operating Margin</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.operating_margin.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.gross_margin !== undefined && fundamental.metrics.gross_margin !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Gross Margin</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.gross_margin.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.revenue_growth !== undefined && fundamental.metrics.revenue_growth !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Revenue Growth</div>
+                  <div className="text-lg font-bold text-blue">{fundamental.metrics.revenue_growth.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.earnings_growth !== undefined && fundamental.metrics.earnings_growth !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Earnings Growth</div>
+                  <div className="text-lg font-bold text-blue">{fundamental.metrics.earnings_growth.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.ev_ebitda !== undefined && fundamental.metrics.ev_ebitda !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">EV/EBITDA</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.ev_ebitda.toFixed(2)}</div>
+                </div>
+              )}
+              {fundamental.metrics.market_cap !== undefined && fundamental.metrics.market_cap !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Market Cap</div>
+                  <div className="text-lg font-bold text-text-primary">
+                    {fundamental.metrics.market_cap >= 1e12 
+                      ? `${currency === 'INR' ? '₹' : '$'} ${(fundamental.metrics.market_cap / 1e12).toFixed(2)}T`
+                      : fundamental.metrics.market_cap >= 1e9
+                      ? `${currency === 'INR' ? '₹' : '$'} ${(fundamental.metrics.market_cap / 1e9).toFixed(2)}B`
+                      : `${currency === 'INR' ? '₹' : '$'} ${(fundamental.metrics.market_cap / 1e6).toFixed(2)}M`
+                    }
+                  </div>
+                </div>
+              )}
+              {fundamental.metrics.institutional_holdings !== undefined && fundamental.metrics.institutional_holdings !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Institutional Holdings</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.institutional_holdings.toFixed(2)}%</div>
+                </div>
+              )}
+              {fundamental.metrics.insider_holdings !== undefined && fundamental.metrics.insider_holdings !== null && (
+                <div>
+                  <div className="text-xs text-text-disabled mb-1">Insider Holdings</div>
+                  <div className="text-lg font-bold text-text-primary">{fundamental.metrics.insider_holdings.toFixed(2)}%</div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* News & Sentiment Card */}
       <div className="bg-card rounded-[16px] p-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">

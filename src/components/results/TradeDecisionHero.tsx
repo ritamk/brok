@@ -1,12 +1,13 @@
-import type { TradeDecision, NewsAnalysis } from '../../types/backend';
+import type { TradeDecision, NewsAnalysis, FundamentalAnalysis } from '../../types/backend';
 
 interface TradeDecisionHeroProps {
   trade: TradeDecision;
   news: NewsAnalysis;
   technicalSignal: string;
+  fundamental?: FundamentalAnalysis;
 }
 
-export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisionHeroProps) {
+export function TradeDecisionHero({ trade, news, technicalSignal, fundamental }: TradeDecisionHeroProps) {
   const getDecisionColor = (decision: string) => {
     const normalized = decision.toUpperCase();
     if (normalized.includes('BUY')) return 'bg-green text-white';
@@ -35,10 +36,29 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
     return '→';
   };
 
-  // Check for conflict between technical and news
+  const getFundamentalSignalColor = (signal: string) => {
+    const normalized = signal.toLowerCase();
+    if (normalized.includes('buy') || normalized.includes('undervalued')) return 'text-green';
+    if (normalized.includes('sell') || normalized.includes('overvalued')) return 'text-red';
+    return 'text-yellow';
+  };
+
+  const getFundamentalIcon = (signal: string) => {
+    const normalized = signal.toLowerCase();
+    if (normalized.includes('undervalued')) return '💎';
+    if (normalized.includes('overvalued')) return '⚠️';
+    if (normalized.includes('fair')) return '⚖️';
+    return '📊';
+  };
+
+  // Check for conflict between technical, news, and fundamental
   const hasConflict = trade.alignment && (
     (trade.alignment.technical.toLowerCase().includes('sell') && trade.alignment.news.toLowerCase().includes('bullish')) ||
-    (trade.alignment.technical.toLowerCase().includes('buy') && trade.alignment.news.toLowerCase().includes('bearish'))
+    (trade.alignment.technical.toLowerCase().includes('buy') && trade.alignment.news.toLowerCase().includes('bearish')) ||
+    (fundamental && trade.alignment.fundamental && (
+      (trade.alignment.technical.toLowerCase().includes('buy') && trade.alignment.fundamental.toLowerCase().includes('overvalued')) ||
+      (trade.alignment.technical.toLowerCase().includes('sell') && trade.alignment.fundamental.toLowerCase().includes('undervalued'))
+    ))
   );
 
   return (
@@ -120,7 +140,7 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
             </div>
           )}
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className={`grid grid-cols-1 ${fundamental && trade.alignment.fundamental ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4`}>
             {/* Technical Signal */}
             <div className="bg-card-hover/50 rounded-lg p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
               <div className="flex items-center gap-2 mb-2">
@@ -150,6 +170,24 @@ export function TradeDecisionHero({ trade, news, technicalSignal }: TradeDecisio
                 {trade.alignment.news}
               </p>
             </div>
+
+            {/* Fundamental Analysis */}
+            {fundamental && trade.alignment.fundamental && (
+              <div className="bg-card-hover/50 rounded-lg p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-2xl">{getFundamentalIcon(fundamental.signal)}</span>
+                  <div>
+                    <div className="text-xs text-text-disabled">Fundamental Analysis</div>
+                    <div className={`font-semibold ${getFundamentalSignalColor(fundamental.signal)}`}>
+                      {fundamental.signal.toUpperCase()}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-sm text-text-secondary leading-relaxed mt-2">
+                  {trade.alignment.fundamental}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       )}

@@ -111,7 +111,7 @@ export function HomePage() {
       )}
 
       {/* Search and selection section */}
-      <div className="w-full max-w-3xl space-y-6">
+      <div className="w-full max-w-3xl space-y-6 mb-20">
         <div className="bg-card rounded-[16px] py-6 px-10 space-y-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
           <div>
             <h2 className="text-xl font-semibold mb-4">Search Stocks to Analyze</h2>
