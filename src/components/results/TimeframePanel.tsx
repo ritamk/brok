@@ -24,82 +24,9 @@ export function TimeframePanel({ currency, result, symbolNews, indiaNews, global
         news={news}
         technicalSignal={technical.signal}
         fundamental={fundamental}
+        risk={technical.risk}
+        currency={currency}
       />
-
-      {/* Technical Analysis Card */}
-      <div className="bg-card rounded-[16px] p-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
-        <div className="mb-6">
-          <h3 className="text-lg font-semibold text-text-primary mb-2">Technical Analysis</h3>
-          <div className="flex items-center gap-4 flex-wrap">
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-text-muted">Signal:</span>
-              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                technical.signal.toLowerCase() === 'buy' ? 'bg-green text-white' :
-                technical.signal.toLowerCase() === 'sell' ? 'bg-red text-white' :
-                'bg-yellow text-white'
-              }`}>
-                {technical.signal.toUpperCase()}
-              </span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-text-muted">Confidence:</span>
-              <span className="text-sm font-semibold text-text-primary">
-                {Math.round(technical.confidence * 100)}%
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Rules Triggered */}
-        {technical.rules_triggered && technical.rules_triggered.length > 0 && (
-          <div className="mb-6">
-            <div className="text-sm text-text-muted mb-2 font-medium">Rules Triggered</div>
-            <div className="flex flex-wrap gap-2">
-              {technical.rules_triggered.map((rule, index) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue/10 rounded-full text-xs text-blue font-medium"
-                >
-                  {rule}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Risk Management */}
-        {technical.risk && (
-          <div className="mb-6 bg-card-hover/50 rounded-lg p-4">
-            <div className="text-sm text-text-muted mb-3 font-medium">Risk Management</div>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {technical.risk.stop_loss !== undefined && (
-                <div>
-                  <div className="text-xs text-text-disabled mb-1">Stop Loss</div>
-                  <div className="text-lg font-bold text-red">{technical.risk.stop_loss.toFixed(2)}</div>
-                </div>
-              )}
-              {technical.risk.take_profit !== undefined && (
-                <div>
-                  <div className="text-xs text-text-disabled mb-1">Take Profit</div>
-                  <div className="text-lg font-bold text-green">{technical.risk.take_profit.toFixed(2)}</div>
-                </div>
-              )}
-              {technical.risk.risk_reward_ratio !== undefined && (
-                <div>
-                  <div className="text-xs text-text-disabled mb-1">Risk/Reward</div>
-                  <div className="text-lg font-bold text-blue">1:{technical.risk.risk_reward_ratio.toFixed(2)}</div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Technical Indicators Gauges */}
-        <div>
-          <div className="text-sm text-text-muted mb-4 font-medium">Technical Indicators</div>
-          <IndicatorGauges indicators={technical.indicators} currentPrice={currentPrice} />
-        </div>
-      </div>
 
       {/* Fundamental Analysis Card */}
       {fundamental && (
@@ -242,6 +169,55 @@ export function TimeframePanel({ currency, result, symbolNews, indiaNews, global
           </div>
         </div>
       )}
+
+      {/* Technical Analysis Card */}
+      <div className="bg-card rounded-[16px] p-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">
+        <div className="mb-6">
+          <h3 className="text-lg font-semibold text-text-primary mb-2">Technical Analysis</h3>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-text-muted">Signal:</span>
+              <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                technical.signal.toLowerCase() === 'buy' ? 'bg-green text-white' :
+                technical.signal.toLowerCase() === 'sell' ? 'bg-red text-white' :
+                'bg-yellow text-white'
+              }`}>
+                {technical.signal.toUpperCase()}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-text-muted">Confidence:</span>
+              <span className="text-sm font-semibold text-text-primary">
+                {Math.round(technical.confidence * 100)}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Rules Triggered */}
+        {technical.rules_triggered && technical.rules_triggered.length > 0 && (
+          <div className="mb-6">
+            <div className="text-sm text-text-muted mb-2 font-medium">Rules Triggered</div>
+            <div className="flex flex-wrap gap-2">
+              {technical.rules_triggered.map((rule, index) => (
+                <span
+                  key={index}
+                  className="px-3 py-1 bg-blue/10 rounded-full text-xs text-blue font-medium"
+                >
+                  {rule}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+
+        {/* Technical Indicators Gauges */}
+        <div>
+          <div className="text-sm text-text-muted mb-4 font-medium">Technical Indicators</div>
+          <IndicatorGauges indicators={technical.indicators} currentPrice={currentPrice} />
+        </div>
+      </div>
 
       {/* News & Sentiment Card */}
       <div className="bg-card rounded-[16px] p-6 shadow-[0_0_20px_0_rgba(0,0,0,0.07)]">

@@ -1,13 +1,15 @@
-import type { TradeDecision, NewsAnalysis, FundamentalAnalysis } from '../../types/backend';
+import type { TradeDecision, NewsAnalysis, FundamentalAnalysis, TechnicalAnalysis } from '../../types/backend';
 
 interface TradeDecisionHeroProps {
   trade: TradeDecision;
   news: NewsAnalysis;
   technicalSignal: string;
   fundamental?: FundamentalAnalysis;
+  risk?: TechnicalAnalysis['risk'];
+  currency?: string;
 }
 
-export function TradeDecisionHero({ trade, news, technicalSignal, fundamental }: TradeDecisionHeroProps) {
+export function TradeDecisionHero({ trade, news, technicalSignal, fundamental, risk, currency }: TradeDecisionHeroProps) {
   const getDecisionColor = (decision: string) => {
     const normalized = decision.toUpperCase();
     if (normalized.includes('BUY')) return 'bg-green text-white';
@@ -113,6 +115,33 @@ export function TradeDecisionHero({ trade, news, technicalSignal, fundamental }:
         <div className="text-sm text-text-muted mb-2 font-medium">Rationale</div>
         <p className="text-text-secondary leading-relaxed">{trade.rationale}</p>
       </div>
+
+      {/* Risk Management */}
+      {risk && (risk.stop_loss !== undefined || risk.take_profit !== undefined || risk.risk_reward_ratio !== undefined) && (
+        <div className="mb-6 bg-card-hover/50 rounded-lg p-4 shadow-[0_0_10px_0_rgba(0,0,0,0.05)]">
+          <div className="text-sm text-text-muted mb-3 font-medium">Trade Prices</div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {risk.stop_loss !== undefined && (
+              <div>
+                <div className="text-xs text-text-disabled mb-1">Stop Loss</div>
+                <div className="text-lg font-bold text-red">{currency === 'INR' ? '₹' : currency === 'USD' ? '$' : currency || ''} {risk.stop_loss.toFixed(2)}</div>
+              </div>
+            )}
+            {risk.take_profit !== undefined && (
+              <div>
+                <div className="text-xs text-text-disabled mb-1">Take Profit</div>
+                <div className="text-lg font-bold text-green">{currency === 'INR' ? '₹' : currency === 'USD' ? '$' : currency || ''} {risk.take_profit.toFixed(2)}</div>
+              </div>
+            )}
+            {risk.risk_reward_ratio !== undefined && (
+              <div>
+                <div className="text-xs text-text-disabled mb-1">Risk/Reward</div>
+                <div className="text-lg font-bold text-blue">{currency === 'INR' ? '₹' : currency === 'USD' ? '$' : currency || ''} 1:{risk.risk_reward_ratio.toFixed(2)}</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Risk Notes */}
       {trade.risk_notes && (
